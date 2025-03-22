@@ -29,13 +29,16 @@ const Home = () => {
           <Link to="/quienes-somos" onClick={toggleLeftSlider}>
             Quiénes somos
           </Link>
+          {/* Nuevo enlace para VisionesVisualiza */}
+          <Link to="/VisionesVisualizar" onClick={toggleLeftSlider}>
+            Visiones
+          </Link>
         </div>
       </div>
 
       {/* Contenido principal */}
       <div className="home-content">
         <h1>Bienvenido a TORTU-TERRA</h1>
-        
 
         {/* Contenedores para imágenes */}
         <div className="image-container">
