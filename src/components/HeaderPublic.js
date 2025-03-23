@@ -31,6 +31,7 @@ const HeaderPublic = () => {
           <ul className={`dropdown-menu ${submenuOpen === "sesion" ? "open" : ""}`}>
             <li><Link to="/registro" className="dropdown-item">Formulario de registro</Link></li>
             <li><Link to="/login" className="dropdown-item">Login</Link></li>
+            <li><Link to="/recuperacion" className="dropdown-item">Recuperacion de contraseña</Link></li>
           </ul>
         </div>
 
