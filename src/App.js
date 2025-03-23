@@ -3,6 +3,7 @@ import React from "react";
 import { Routes, Route } from "react-router-dom";
 import FormLogin from "./components/FormLogin";
 import FormRegistro from "./components/FormRegistro";
+import FormRecuperacion from "./components/FormRecuperacion";
 import Home from "./components/Home";
 import UserDashboard from "./page/UserDashboard";
 import AdminDashboard from "./page/AdminDashboard";
@@ -28,6 +29,7 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<FormLogin />} />
         <Route path="/registro" element={<FormRegistro />} />
+        <Route path="/recuperacion" element={<FormRecuperacion />} />
         <Route path="/mision" element={<MisionesVisualizar />} />
         <Route path="/InformacionVisualizar" element={<InformacionVisualizar/>} />
         <Route path="/productos" element={<ProductosVisualizar/>}/>
