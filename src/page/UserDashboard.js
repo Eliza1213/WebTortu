@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Link, Routes, Route } from "react-router-dom";
-import "../style/userDashboard.css";
-import TerrarioControl from "../components/TerrarioControl"; // Importa el nuevo componente
+import "../../style/userDashboard.css";
+import TerrarioControl from "../../components/TerrarioControl"; // Importa el nuevo componente
 
 const UserDashboard = () => {
   const [sliderOpen, setSliderOpen] = useState(false);
