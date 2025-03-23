@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
+import '../style/registro.css';
 
 const FormRegistro = () => {
   const [formData, setFormData] = useState({
@@ -59,22 +60,60 @@ const FormRegistro = () => {
     let errores = [];
 
     if (step === 0) {
-      if (!soloLetras.test(nombre)) errores.push("El campo 'Nombre/s' solo debe contener letras.");
-      if (!soloLetras.test(ap)) errores.push("El campo 'Apellido Paterno' solo debe contener letras.");
-      if (!soloLetras.test(am)) errores.push("El campo 'Apellido Materno' solo debe contener letras.");
+      if (!nombre) {
+        errores.push("El campo 'Nombre/s' es obligatorio.");
+      } else if (!soloLetras.test(nombre)) {
+        errores.push("El campo 'Nombre/s' solo debe contener letras.");
+      }
+      if (!ap) {
+        errores.push("El campo 'Apellido Paterno' es obligatorio.");
+      } else if (!soloLetras.test(ap)) {
+        errores.push("El campo 'Apellido Paterno' solo debe contener letras.");
+      }
+      if (!am) {
+        errores.push("El campo 'Apellido Materno' es obligatorio.");
+      } else if (!soloLetras.test(am)) {
+        errores.push("El campo 'Apellido Materno' solo debe contener letras.");
+      }
     }
 
     if (step === 1) {
-      if (!letrasYNumeros.test(username)) errores.push("El campo 'Nombre de Usuario' solo debe contener letras y números.");
-      if (!emailRegex.test(email)) errores.push("El campo 'Correo Electrónico' no es válido.");
-      if (!passwordRegex.test(password)) errores.push("La contraseña debe tener al menos 12 caracteres, incluyendo una letra mayúscula, un número y un carácter especial.");
-      if (password !== confirmPassword) errores.push("Las contraseñas no coinciden.");
+      if (!username) {
+        errores.push("El campo 'Nombre de Usuario' es obligatorio.");
+      } else if (!letrasYNumeros.test(username)) {
+        errores.push("El campo 'Nombre de Usuario' solo debe contener letras y números.");
+      }
+      if (!email) {
+        errores.push("El campo 'Correo Electrónico' es obligatorio.");
+      } else if (!emailRegex.test(email)) {
+        errores.push("El campo 'Correo Electrónico' no es válido.");
+      }
+      if (!password) {
+        errores.push("El campo 'Contraseña' es obligatorio.");
+      } else if (!passwordRegex.test(password)) {
+        errores.push("La contraseña debe tener al menos 12 caracteres, incluyendo una letra mayúscula, un número y un carácter especial.");
+      }
+      if (!confirmPassword) {
+        errores.push("El campo 'Confirmar Contraseña' es obligatorio.");
+      } else if (password !== confirmPassword) {
+        errores.push("Las contraseñas no coinciden.");
+      }
     }
 
     if (step === 2) {
-      if (!telefonoRegex.test(telefono)) errores.push("El campo 'Teléfono' debe contener exactamente 10 dígitos.");
-      if (!soloLetras.test(respuestaSecreta)) errores.push("El campo 'Respuesta Secreta' solo debe contener letras.");
-      if (!terminos) errores.push("Debes aceptar los términos y condiciones.");
+      if (!telefono) {
+        errores.push("El campo 'Teléfono' es obligatorio.");
+      } else if (!telefonoRegex.test(telefono)) {
+        errores.push("El campo 'Teléfono' debe contener exactamente 10 dígitos.");
+      }
+      if (!respuestaSecreta) {
+        errores.push("El campo 'Respuesta Secreta' es obligatorio.");
+      } else if (!soloLetras.test(respuestaSecreta)) {
+        errores.push("El campo 'Respuesta Secreta' solo debe contener letras.");
+      }
+      if (!terminos) {
+        errores.push("Debes aceptar los términos y condiciones.");
+      }
     }
 
     if (errores.length > 0) {
@@ -86,6 +125,13 @@ const FormRegistro = () => {
       return false;
     }
     return true;
+  };
+
+  // Manejar el clic en el botón "Siguiente"
+  const handleNextStep = () => {
+    if (validarPaso(step)) {
+      setStep(step + 1);
+    }
   };
 
   // Manejar el envío del formulario
@@ -145,7 +191,7 @@ const FormRegistro = () => {
             <label>Apellido Materno:</label>
             <input type="text" name="am" value={formData.am} onChange={handleChange} required />
 
-            <button type="button" onClick={() => setStep(1)}>Siguiente</button>
+            <button type="button" onClick={handleNextStep}>Siguiente</button>
           </div>
         )}
 
@@ -179,7 +225,7 @@ const FormRegistro = () => {
             />
 
             <button type="button" onClick={() => setStep(0)}>Atrás</button>
-            <button type="button" onClick={() => setStep(2)}>Siguiente</button>
+            <button type="button" onClick={handleNextStep}>Siguiente</button>
           </div>
         )}
 
