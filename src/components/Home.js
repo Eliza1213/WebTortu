@@ -20,15 +20,33 @@ const Home = () => {
       <div className={`left-slider ${leftSliderOpen ? "open" : ""}`}>
         <div className="slider-content">
           <h2>Menú</h2>
-          <Link to="/informacion-tortugas" onClick={toggleLeftSlider}>
+          <Link to="/InformacionVisualizar" onClick={toggleLeftSlider}>
             Información de tortugas
           </Link>
           <Link to="/productos" onClick={toggleLeftSlider}>
             Productos
           </Link>
-          <Link to="/quienes-somos" onClick={toggleLeftSlider}>
-            Quiénes somos
+          <Link to="/contacto" onClick={toggleLeftSlider}>
+            Contacto
           </Link>
+          <Link to="/mision" onClick={toggleLeftSlider}>
+            Misión
+          </Link>
+          <Link to="vision" onClick={toggleLeftSlider}>
+            Visión
+          </Link>
+          <Link to="politicas" onClick={toggleLeftSlider}>
+            Politicas
+          </Link>
+          <Link to="preguntas" onClick={toggleLeftSlider}>
+            Preguntas
+          </Link>
+          <Link to="terminos" onClick={toggleLeftSlider}>
+            Terminos y condiciones
+          </Link>
+          
+          
+
         </div>
       </div>
 

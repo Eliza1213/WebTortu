@@ -1,0 +1,41 @@
+.visiones-container {
+    max-width: 600px;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  .visiones-title {
+    text-align: center;
+    color: #333;
+    font-size: 24px;
+  }
+  
+  .visiones-list {
+    list-style: none;
+    padding: 0;
+  }
+  
+  .vision-item {
+    background: white;
+    padding: 15px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+    border-left: 5px solid #4CAF50;
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+  }
+  
+  .vision-item h3 {
+    margin: 0;
+    color: #333;
+    font-size: 20px;
+  }
+  
+  .vision-item p {
+    margin: 5px 0 0;
+    color: #666;
+    font-size: 16px;
+  }
+  
