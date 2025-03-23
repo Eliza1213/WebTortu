@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import Swal from "sweetalert2"; // Importa SweetAlert2
+import "../style/Crear.css"; // Importa el archivo CSS
 
 const CrearMision = () => {
   const [titulo, setTitulo] = useState("");
@@ -20,7 +22,15 @@ const CrearMision = () => {
       });
 
       if (response.ok) {
-        alert("Misión creada con éxito");
+        // Mostrar alerta de éxito con SweetAlert2
+        Swal.fire({
+          title: "¡Éxito!",
+          text: "Misión creada con éxito",
+          icon: "success",
+          confirmButtonText: "Aceptar",
+        });
+
+        // Limpiar el formulario después de crear la misión
         setTitulo("");
         setDescripcion("");
       } else {
@@ -29,11 +39,19 @@ const CrearMision = () => {
     } catch (error) {
       console.error("Error en la creación de misión:", error);
       setError(error.message);
+
+      // Mostrar alerta de error con SweetAlert2
+      Swal.fire({
+        title: "Error",
+        text: error.message || "Hubo un problema al crear la misión",
+        icon: "error",
+        confirmButtonText: "Aceptar",
+      });
     }
   };
 
   return (
-    <div className="misiones-container">
+    <div className="visiones-container"> {/* Usamos la misma clase CSS */}
       <h2>Crear Misión</h2>
       {error && <p style={{ color: "red" }}>{error}</p>}
       <form onSubmit={handleSubmit}>

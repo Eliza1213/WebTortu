@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import "../style/ListaPoliticas.css"; // Importa el archivo de estilos
+import Swal from "sweetalert2"; // Importa SweetAlert2
+import "../style/Lista.css"; // Importa el archivo CSS compartido
 
 const ListarPoliticas = () => {
   const [politicas, setPoliticas] = useState([]);
@@ -22,7 +23,19 @@ const ListarPoliticas = () => {
   }, []);
 
   const handleEliminar = async (id) => {
-    if (window.confirm("¿Estás seguro de que deseas eliminar esta política?")) {
+    // Mostrar confirmación con SweetAlert2
+    const confirmacion = await Swal.fire({
+      title: "¿Estás seguro?",
+      text: "¡No podrás revertir esto!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#003366", // Azul marino
+      cancelButtonColor: "#dc3545", // Rojo
+      confirmButtonText: "Sí, eliminar",
+      cancelButtonText: "Cancelar",
+    });
+
+    if (confirmacion.isConfirmed) {
       try {
         const response = await fetch(`http://localhost:4000/api/politicas/${id}`, {
           method: "DELETE",
@@ -30,26 +43,50 @@ const ListarPoliticas = () => {
 
         if (response.ok) {
           setPoliticas(politicas.filter((politica) => politica._id !== id));
+
+          // Mostrar alerta de éxito con SweetAlert2
+          Swal.fire({
+            title: "¡Eliminado!",
+            text: "La política ha sido eliminada.",
+            icon: "success",
+            confirmButtonColor: "#003366", // Azul marino
+          });
         } else {
           console.error("Error al eliminar la política");
+
+          // Mostrar alerta de error con SweetAlert2
+          Swal.fire({
+            title: "Error",
+            text: "Hubo un problema al eliminar la política.",
+            icon: "error",
+            confirmButtonColor: "#003366", // Azul marino
+          });
         }
       } catch (error) {
         console.error("Error:", error);
+
+        // Mostrar alerta de error con SweetAlert2
+        Swal.fire({
+          title: "Error",
+          text: "Hubo un problema al eliminar la política.",
+          icon: "error",
+          confirmButtonColor: "#003366", // Azul marino
+        });
       }
     }
   };
 
   return (
-    <div className="politicas-container">
-      <h2 className="politicas-titulo">Políticas</h2>
+    <div className="preguntas-container">
+      <h2 className="preguntas-titulo">Listado de Políticas</h2>
       {/* Botón para crear una nueva política */}
       <Link to="/admin/politicas/crear" className="btn-crear">
         ➕ Crear Nueva Política
       </Link>
       {politicas.length === 0 ? (
-        <p className="politicas-vacio">No hay políticas disponibles</p>
+        <p className="preguntas-vacio">No hay políticas disponibles</p>
       ) : (
-        <table className="politicas-tabla">
+        <table className="preguntas-tabla">
           <thead>
             <tr>
               <th>Título</th>
@@ -58,7 +95,7 @@ const ListarPoliticas = () => {
           </thead>
           <tbody>
             {politicas.map((politica) => (
-              <tr key={politica._id} className="politica-fila">
+              <tr key={politica._id} className="pregunta-fila">
                 <td>{politica.titulo}</td>
                 <td className="acciones">
                   <Link

@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import Swal from "sweetalert2"; // Importa SweetAlert2
+import "../style/Crear.css"; // Importa el archivo CSS
 
 const CrearTermino = () => {
   const [titulo, setTitulo] = useState("");
@@ -20,7 +22,13 @@ const CrearTermino = () => {
       });
 
       if (response.ok) {
-        alert("Término creado con éxito");
+        // Mostrar alerta de éxito con SweetAlert2
+        Swal.fire({
+          title: "¡Éxito!",
+          text: "Término creado con éxito",
+          icon: "success",
+          confirmButtonText: "Aceptar",
+        });
         setTitulo("");
         setDescripcion("");
       } else {
@@ -29,13 +37,21 @@ const CrearTermino = () => {
     } catch (error) {
       console.error("Error en la creación de término:", error);
       setError(error.message);
+
+      // Mostrar alerta de error con SweetAlert2
+      Swal.fire({
+        title: "Error",
+        text: error.message || "Hubo un problema al crear el término",
+        icon: "error",
+        confirmButtonText: "Aceptar",
+      });
     }
   };
 
   return (
-    <div className="misiones-container">
+    <div className="visiones-container"> {/* Mantenemos la misma clase CSS */}
       <h2>Crear Término</h2>
-      {error && <p style={{ color: "red" }}>{error}</p>}
+      {error && <p>{error}</p>}
       <form onSubmit={handleSubmit}>
         <input
           type="text"

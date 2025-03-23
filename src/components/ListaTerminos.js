@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import "../style/ListaTerminos.css"; // Importa el archivo de estilos
+import Swal from "sweetalert2"; // Importa SweetAlert2
+import "../style/Lista.css"; // Importa el archivo CSS compartido
 
 const ListarTerminos = () => {
   const [terminos, setTerminos] = useState([]);
@@ -22,7 +23,19 @@ const ListarTerminos = () => {
   }, []);
 
   const handleEliminar = async (id) => {
-    if (window.confirm("¿Estás seguro de que deseas eliminar este término?")) {
+    // Mostrar confirmación con SweetAlert2
+    const confirmacion = await Swal.fire({
+      title: "¿Estás seguro?",
+      text: "¡No podrás revertir esto!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#003366", // Azul marino
+      cancelButtonColor: "#dc3545", // Rojo
+      confirmButtonText: "Sí, eliminar",
+      cancelButtonText: "Cancelar",
+    });
+
+    if (confirmacion.isConfirmed) {
       try {
         const response = await fetch(`http://localhost:4000/api/terminos/${id}`, {
           method: "DELETE",
@@ -30,26 +43,50 @@ const ListarTerminos = () => {
 
         if (response.ok) {
           setTerminos(terminos.filter((termino) => termino._id !== id));
+
+          // Mostrar alerta de éxito con SweetAlert2
+          Swal.fire({
+            title: "¡Eliminado!",
+            text: "El término ha sido eliminado.",
+            icon: "success",
+            confirmButtonColor: "#003366", // Azul marino
+          });
         } else {
           console.error("Error al eliminar el término");
+
+          // Mostrar alerta de error con SweetAlert2
+          Swal.fire({
+            title: "Error",
+            text: "Hubo un problema al eliminar el término.",
+            icon: "error",
+            confirmButtonColor: "#003366", // Azul marino
+          });
         }
       } catch (error) {
         console.error("Error:", error);
+
+        // Mostrar alerta de error con SweetAlert2
+        Swal.fire({
+          title: "Error",
+          text: "Hubo un problema al eliminar el término.",
+          icon: "error",
+          confirmButtonColor: "#003366", // Azul marino
+        });
       }
     }
   };
 
   return (
-    <div className="terminos-container">
-      <h2 className="terminos-titulo">Términos</h2>
+    <div className="preguntas-container">
+      <h2 className="preguntas-titulo">Listado de Términos y condiciones</h2>
       {/* Botón para crear un nuevo término */}
       <Link to="/admin/terminos/crear" className="btn-crear">
         ➕ Crear Nuevo Término
       </Link>
       {terminos.length === 0 ? (
-        <p className="terminos-vacio">No hay términos disponibles</p>
+        <p className="preguntas-vacio">No hay términos disponibles</p>
       ) : (
-        <table className="terminos-tabla">
+        <table className="preguntas-tabla">
           <thead>
             <tr>
               <th>Título</th>
@@ -58,7 +95,7 @@ const ListarTerminos = () => {
           </thead>
           <tbody>
             {terminos.map((termino) => (
-              <tr key={termino._id} className="termino-fila">
+              <tr key={termino._id} className="pregunta-fila">
                 <td>{termino.titulo}</td>
                 <td className="acciones">
                   <Link

@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
+import Swal from "sweetalert2";
+import "../style/Actualizar.css";
 
 const ActualizarPregunta = () => {
-  const { id } = useParams(); // Obtiene el ID de la pregunta desde la URL
-  const navigate = useNavigate(); // Para redirigir después de actualizar
+  const { id } = useParams();
+  const navigate = useNavigate();
   const [pregunta, setPregunta] = useState("");
   const [respuesta, setRespuesta] = useState("");
 
@@ -36,33 +38,29 @@ const ActualizarPregunta = () => {
       });
 
       if (response.ok) {
-        alert("Pregunta actualizada con éxito");
-        navigate("/admin/preguntas/listar"); // Redirige a la lista de preguntas
+        Swal.fire({
+          icon: "success",
+          title: "Éxito",
+          text: "Pregunta actualizada con éxito",
+        }).then(() => navigate("/admin/preguntas/listar"));
       } else {
-        alert("Error al actualizar pregunta");
+        throw new Error("Error al actualizar la pregunta");
       }
     } catch (error) {
-      console.error("Error en la actualización:", error);
+      Swal.fire({
+        icon: "error",
+        title: "Error",
+        text: "No se pudo actualizar la pregunta",
+      });
     }
   };
 
   return (
-    <div className="preguntas-container">
+    <div className="contactos-container">
       <h2>Actualizar Pregunta</h2>
       <form onSubmit={handleSubmit}>
-        <input
-          type="text"
-          placeholder="Pregunta"
-          value={pregunta}
-          onChange={(e) => setPregunta(e.target.value)}
-          required
-        />
-        <textarea
-          placeholder="Respuesta"
-          value={respuesta}
-          onChange={(e) => setRespuesta(e.target.value)}
-          required
-        />
+        <input type="text" placeholder="Pregunta" value={pregunta} onChange={(e) => setPregunta(e.target.value)} required />
+        <textarea placeholder="Respuesta" value={respuesta} onChange={(e) => setRespuesta(e.target.value)} required />
         <button type="submit">Actualizar Pregunta</button>
       </form>
     </div>

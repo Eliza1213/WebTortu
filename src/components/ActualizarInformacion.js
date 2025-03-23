@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
+import Swal from "sweetalert2";
+import "../style/Actualizar.css"; // Importa el archivo CSS
 
 const ActualizarInformacion = () => {
   const { id } = useParams(); // Obtiene el ID de la información desde la URL
@@ -51,18 +53,33 @@ const ActualizarInformacion = () => {
       });
 
       if (response.ok) {
-        alert("Información actualizada con éxito");
-        navigate("/admin/informacion/listar"); // Redirige a la lista de información
+        Swal.fire({
+          icon: "success",
+          title: "Éxito",
+          text: "Información actualizada con éxito",
+          confirmButtonText: "Aceptar",
+        }).then(() => {
+          navigate("/admin/informacion/listar"); // Redirige después de aceptar
+        });
       } else {
-        alert("Error al actualizar la información");
+        Swal.fire({
+          icon: "error",
+          title: "Error",
+          text: "Error al actualizar la información",
+        });
       }
     } catch (error) {
       console.error("Error en la actualización:", error);
+      Swal.fire({
+        icon: "error",
+        title: "Error",
+        text: "Ocurrió un problema al actualizar la información",
+      });
     }
   };
 
   return (
-    <div className="informacion-container">
+    <div className="contactos-container">
       <h2>Actualizar Información</h2>
       <form onSubmit={handleSubmit}>
         <input
