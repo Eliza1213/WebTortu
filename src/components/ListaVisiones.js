@@ -1,7 +1,7 @@
-// components/ListarVisiones.js
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import "../style/ListaVisiones.css"; // Importa el archivo de estilos
+import Swal from "sweetalert2"; // Importa SweetAlert2
+import "../style/Lista.css"; // Importa el archivo CSS compartido
 
 const ListarVisiones = () => {
   const [visiones, setVisiones] = useState([]);
@@ -23,7 +23,19 @@ const ListarVisiones = () => {
   }, []);
 
   const handleEliminar = async (id) => {
-    if (window.confirm("¿Estás seguro de que deseas eliminar esta visión?")) {
+    // Mostrar confirmación con SweetAlert2
+    const confirmacion = await Swal.fire({
+      title: "¿Estás seguro?",
+      text: "¡No podrás revertir esto!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#003366", // Azul marino
+      cancelButtonColor: "#dc3545", // Rojo
+      confirmButtonText: "Sí, eliminar",
+      cancelButtonText: "Cancelar",
+    });
+
+    if (confirmacion.isConfirmed) {
       try {
         const response = await fetch(`http://localhost:4000/api/visiones/${id}`, {
           method: "DELETE",
@@ -31,26 +43,50 @@ const ListarVisiones = () => {
 
         if (response.ok) {
           setVisiones(visiones.filter((vision) => vision._id !== id));
+
+          // Mostrar alerta de éxito con SweetAlert2
+          Swal.fire({
+            title: "¡Eliminado!",
+            text: "La visión ha sido eliminada.",
+            icon: "success",
+            confirmButtonColor: "#003366", // Azul marino
+          });
         } else {
           console.error("Error al eliminar la visión");
+
+          // Mostrar alerta de error con SweetAlert2
+          Swal.fire({
+            title: "Error",
+            text: "Hubo un problema al eliminar la visión.",
+            icon: "error",
+            confirmButtonColor: "#003366", // Azul marino
+          });
         }
       } catch (error) {
         console.error("Error:", error);
+
+        // Mostrar alerta de error con SweetAlert2
+        Swal.fire({
+          title: "Error",
+          text: "Hubo un problema al eliminar la visión.",
+          icon: "error",
+          confirmButtonColor: "#003366", // Azul marino
+        });
       }
     }
   };
 
   return (
-    <div className="visiones-container">
-      <h2 className="visiones-titulo">Visiones</h2>
+    <div className="preguntas-container">
+      <h2 className="preguntas-titulo">Listado de Visiones</h2>
       {/* Botón para crear una nueva visión */}
       <Link to="/admin/visiones/crear" className="btn-crear">
         ➕ Crear Nueva Visión
       </Link>
       {visiones.length === 0 ? (
-        <p className="visiones-vacio">No hay visiones disponibles</p>
+        <p className="preguntas-vacio">No hay visiones disponibles</p>
       ) : (
-        <table className="visiones-tabla">
+        <table className="preguntas-tabla">
           <thead>
             <tr>
               <th>Título</th>
@@ -59,7 +95,7 @@ const ListarVisiones = () => {
           </thead>
           <tbody>
             {visiones.map((vision) => (
-              <tr key={vision._id} className="vision-fila">
+              <tr key={vision._id} className="pregunta-fila">
                 <td>{vision.titulo}</td>
                 <td className="acciones">
                   <Link

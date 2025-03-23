@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
+import Swal from "sweetalert2";
+import "../style/Actualizar.css"; // Importa el archivo CSS
 
 const ActualizarMision = () => {
-  const { id } = useParams();
-  const navigate = useNavigate();
+  const { id } = useParams(); // Obtiene el ID de la misión desde la URL
+  const navigate = useNavigate(); // Para redirigir después de actualizar
   const [titulo, setTitulo] = useState("");
   const [descripcion, setDescripcion] = useState("");
   const [error, setError] = useState("");
@@ -41,19 +43,29 @@ const ActualizarMision = () => {
       });
 
       if (response.ok) {
-        alert("Misión actualizada con éxito");
-        navigate("/admin/misiones/listar");
+        Swal.fire({
+          icon: "success",
+          title: "Éxito",
+          text: "Misión actualizada con éxito",
+          confirmButtonText: "Aceptar",
+        }).then(() => {
+          navigate("/admin/misiones/listar"); // Redirige a la lista de misiones
+        });
       } else {
         throw new Error("Error al actualizar misión");
       }
     } catch (error) {
       console.error("Error en la actualización:", error);
-      setError(error.message);
+      Swal.fire({
+        icon: "error",
+        title: "Error",
+        text: "Ocurrió un problema al actualizar la misión",
+      });
     }
   };
 
   return (
-    <div className="misiones-container">
+    <div className="contactos-container">
       <h2>Actualizar Misión</h2>
       {error && <p style={{ color: "red" }}>{error}</p>}
       <form onSubmit={handleSubmit}>

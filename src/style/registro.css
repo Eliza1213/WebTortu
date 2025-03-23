@@ -8,14 +8,32 @@ body {
     padding: 0;
 }
 
+/* Contenedor del formulario */
+.form-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 50vh;
+}
+
+/* Centrar el título */
+h2 {
+    text-align: center;
+    font-size: 1.5rem;
+    color: #2a7f68;
+    margin-bottom: 1.5rem;
+}
+
 /* Formulario */
 form {
     background-color: #ffffff;
     border: 1px solid #cccccc;
-    padding: 1.5rem;
+    padding: 2.5rem;
     border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    max-width: 500px;
+    max-width: 600px;
+    width: 100%;
     margin: 2rem auto;
 }
 
@@ -51,6 +69,7 @@ button {
     border: none;
     border-radius: 4px;
     cursor: pointer;
+    transition: background-color 0.3s ease;
 }
 
 button[type="submit"] {
@@ -71,9 +90,23 @@ button.cancel:hover {
     background-color: #cccccc;
 }
 
+/* Casilla de verificación */
+input[type="checkbox"] {
+    accent-color: #2a7f68;
+    transform: scale(1.2);
+    margin-right: 0.5rem;
+}
+
+/* Contenedor de los pasos del formulario */
+.step-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
 /* Espaciado y Márgenes */
 .container {
     padding: 1rem;
-    max-width: 600px;
+    max-width: 700px;
     margin: 0 auto;
 }

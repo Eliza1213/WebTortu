@@ -6,9 +6,10 @@ const ActualizarContacto = () => {
   const navigate = useNavigate(); // Para redirigir después de actualizar
   const [email, setEmail] = useState("");
   const [telefono, setTelefono] = useState("");
-  const [ubicacion, setUbicacion] = useState("");
+  const [ubicacion, setUbicacion] = useState({ lat: "", lng: "", direccion: "" });
   const [redesSociales, setRedesSociales] = useState([]);
 
+  // Obtiene los datos del contacto al cargar el componente
   useEffect(() => {
     const fetchContacto = async () => {
       try {
@@ -17,7 +18,7 @@ const ActualizarContacto = () => {
         const data = await response.json();
         setEmail(data.email);
         setTelefono(data.telefono);
-        setUbicacion(data.ubicacion);
+        setUbicacion(data.ubicacion); // Asegúrate de que el backend envíe { lat, lng, direccion }
         setRedesSociales(data.redes_sociales || []);
       } catch (error) {
         console.error("Error al obtener el contacto:", error);
@@ -27,25 +28,51 @@ const ActualizarContacto = () => {
     fetchContacto();
   }, [id]);
 
+  // Agrega una nueva red social
   const handleAgregarRedSocial = () => {
     setRedesSociales([...redesSociales, { nombre: "", enlace: "" }]);
   };
 
+  // Elimina una red social
   const handleEliminarRedSocial = (index) => {
     const nuevasRedes = redesSociales.filter((_, i) => i !== index);
     setRedesSociales(nuevasRedes);
   };
 
+  // Actualiza una red social
   const handleCambiarRedSocial = (index, campo, valor) => {
     const nuevasRedes = [...redesSociales];
     nuevasRedes[index][campo] = valor;
     setRedesSociales(nuevasRedes);
   };
 
+  // Maneja el envío del formulario
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const updatedContacto = { email, telefono, ubicacion, redes_sociales: redesSociales };
+    // Valida que todos los campos de ubicación estén llenos
+    if (!ubicacion.lat || !ubicacion.lng || !ubicacion.direccion) {
+      alert("Por favor, completa todos los campos de ubicación.");
+      return;
+    }
+
+    // Valida que las redes sociales tengan nombre y enlace
+    const redesValidas = redesSociales.every((red) => red.nombre && red.enlace);
+    if (!redesValidas) {
+      alert("Por favor, completa todos los campos de redes sociales.");
+      return;
+    }
+
+    const updatedContacto = {
+      email,
+      telefono,
+      ubicacion: {
+        lat: parseFloat(ubicacion.lat),
+        lng: parseFloat(ubicacion.lng),
+        direccion: ubicacion.direccion,
+      },
+      redes_sociales: redesSociales,
+    };
 
     try {
       const response = await fetch(`http://localhost:4000/api/contactos/${id}`, {
@@ -85,15 +112,29 @@ const ActualizarContacto = () => {
         />
         <input
           type="text"
-          placeholder="Ubicación"
-          value={ubicacion}
-          onChange={(e) => setUbicacion(e.target.value)}
+          placeholder="Latitud"
+          value={ubicacion.lat}
+          onChange={(e) => setUbicacion({ ...ubicacion, lat: e.target.value })}
+          required
+        />
+        <input
+          type="text"
+          placeholder="Longitud"
+          value={ubicacion.lng}
+          onChange={(e) => setUbicacion({ ...ubicacion, lng: e.target.value })}
+          required
+        />
+        <input
+          type="text"
+          placeholder="Dirección"
+          value={ubicacion.direccion}
+          onChange={(e) => setUbicacion({ ...ubicacion, direccion: e.target.value })}
           required
         />
 
         <h4>Redes Sociales</h4>
         {redesSociales.map((red, index) => (
-          <div key={index}>
+          <div key={index} style={{ marginBottom: "10px" }}>
             <input
               type="text"
               placeholder="Nombre de la red social"
@@ -108,12 +149,16 @@ const ActualizarContacto = () => {
               onChange={(e) => handleCambiarRedSocial(index, "enlace", e.target.value)}
               required
             />
-            <button type="button" onClick={() => handleEliminarRedSocial(index)}>
+            <button
+              type="button"
+              onClick={() => handleEliminarRedSocial(index)}
+              style={{ marginLeft: "10px" }}
+            >
               Eliminar
             </button>
           </div>
         ))}
-        <button type="button" onClick={handleAgregarRedSocial}>
+        <button type="button" onClick={handleAgregarRedSocial} style={{ marginBottom: "10px" }}>
           Agregar Red Social
         </button>
 

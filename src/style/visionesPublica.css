@@ -1,41 +1,54 @@
-.visiones-container {
-    max-width: 600px;
-    margin: 20px auto;
-    padding: 20px;
-    background-color: #f9f9f9;
-    border-radius: 8px;
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-  }
-  
-  .visiones-title {
-    text-align: center;
-    color: #333;
-    font-size: 24px;
-  }
-  
-  .visiones-list {
-    list-style: none;
-    padding: 0;
-  }
-  
-  .vision-item {
-    background: white;
-    padding: 15px;
-    margin-bottom: 10px;
-    border-radius: 5px;
-    border-left: 5px solid #4CAF50;
-    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
-  }
-  
-  .vision-item h3 {
-    margin: 0;
-    color: #333;
-    font-size: 20px;
-  }
-  
-  .vision-item p {
-    margin: 5px 0 0;
-    color: #666;
-    font-size: 16px;
-  }
+/* Estilos generales */
+.misiones-container {
+  padding: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+  font-family: Arial, sans-serif;
+}
+
+.misiones-title {
+  text-align: center;
+  font-size: 2.5rem;
+  color: #2c3e50;
+  margin-bottom: 20px;
+}
+
+.no-misiones {
+  text-align: center;
+  color: #777;
+  font-size: 1.2rem;
+}
+
+/* Estilos para la cuadrícula de misiones */
+.misiones-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 20px;
+}
+
+/* Estilos para cada tarjeta de misión */
+.mision-card {
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.mision-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+.mision-titulo {
+  font-size: 1.5rem;
+  color: #34495e;
+  margin-bottom: 10px;
+}
+
+.mision-descripcion {
+  font-size: 1rem;
+  color: #555;
+  line-height: 1.6;
+}
   

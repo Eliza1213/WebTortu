@@ -177,32 +177,32 @@ const FormRegistro = () => {
   };
 
   return (
-    <div>
+    <div className="form-container">
       <h2>Registro de Usuario</h2>
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit} className="step-container">
         {step === 0 && (
           <div>
             <label>Nombre/s:</label>
             <input type="text" name="nombre" value={formData.nombre} onChange={handleChange} required />
-
+  
             <label>Apellido Paterno:</label>
             <input type="text" name="ap" value={formData.ap} onChange={handleChange} required />
-
+  
             <label>Apellido Materno:</label>
             <input type="text" name="am" value={formData.am} onChange={handleChange} required />
-
+  
             <button type="button" onClick={handleNextStep}>Siguiente</button>
           </div>
         )}
-
+  
         {step === 1 && (
           <div>
             <label>Nombre de Usuario:</label>
             <input type="text" name="username" value={formData.username} onChange={handleChange} required />
-
+  
             <label>Correo Electrónico:</label>
             <input type="email" name="email" value={formData.email} onChange={handleChange} required />
-
+  
             <label>Contraseña:</label>
             <input
               type={showPassword ? "text" : "password"}
@@ -214,7 +214,7 @@ const FormRegistro = () => {
             <button type="button" onClick={togglePasswordVisibility}>
               {showPassword ? "🙈" : "👁️"}
             </button>
-
+  
             <label>Confirmar Contraseña:</label>
             <input
               type={showPassword ? "text" : "password"}
@@ -223,17 +223,17 @@ const FormRegistro = () => {
               onChange={handleChange}
               required
             />
-
-            <button type="button" onClick={() => setStep(0)}>Atrás</button>
+  
+            <button type="button" className="cancel" onClick={() => setStep(0)}>Atrás</button>
             <button type="button" onClick={handleNextStep}>Siguiente</button>
           </div>
         )}
-
+  
         {step === 2 && (
           <div>
             <label>Teléfono:</label>
             <input type="tel" name="telefono" value={formData.telefono} onChange={handleChange} required />
-
+  
             <label>Pregunta Secreta:</label>
             <select name="preguntaSecreta" value={formData.preguntaSecreta} onChange={handleChange} required>
               <option value="">Selecciona una pregunta</option>
@@ -243,10 +243,10 @@ const FormRegistro = () => {
               <option value="nombre-mascota">¿Cuál es el nombre de tu mascota?</option>
               <option value="deporte-favorito">¿Cuál es tu deporte favorito?</option>
             </select>
-
+  
             <label>Respuesta Secreta:</label>
             <input type="text" name="respuestaSecreta" value={formData.respuestaSecreta} onChange={handleChange} required />
-
+  
             <label>
               <input
                 type="checkbox"
@@ -257,8 +257,8 @@ const FormRegistro = () => {
               />
               Acepto los términos y condiciones
             </label>
-
-            <button type="button" onClick={() => setStep(1)}>Atrás</button>
+  
+            <button type="button" className="cancel" onClick={() => setStep(1)}>Atrás</button>
             <button type="submit">Registrarse</button>
           </div>
         )}

@@ -22,9 +22,9 @@ import ActualizarContacto from "../components/ActualizarContacto";
 import CrearProducto from "../components/CrearProducto";
 import ListaProductos from "../components/ListaProductos";
 import ActualizarProducto from "../components/ActualizarProducto";
-import CrearInformacion from "../components/CrearInformacion";
-import ListaInformacion from "../components/ListaInformacion";
-import ActualizarInformacion from "../components/ActualizarInformacion";
+import CrearInformacion from "../components/CrearInformacion"; // Nuevo
+import ListaInformacion from "../components/ListaInformacion"; // Nuevo
+import ActualizarInformacion from "../components/ActualizarInformacion"; // Nuevo
 
 const AdminDashboard = () => {
   return (
