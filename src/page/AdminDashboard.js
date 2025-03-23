@@ -1,30 +1,30 @@
-import "../../style/Admin.css";
+import "../style/Admin.css";
 import React from "react";
 import { Link, Routes, Route } from "react-router-dom";
-import CrearMision from "../../components/CrearMision";
-import ListaMisiones from "../../components/ListaMisiones";
-import ActualizarMision from "../../components/ActualizarMision";
-import CrearVision from "../../components/CrearVision";
-import ListaVisiones from "../../components/ListaVisiones";
-import ActualizarVision from "../../components/ActualizarVision";
-import CrearTermino from "../../components/CrearTermino";
-import ListaTerminos from "../../components/ListaTerminos";
-import ActualizarTermino from "../../components/ActualizarTermino";
-import CrearPolitica from "../../components/CrearPolitica";
-import ListaPoliticas from "../../components/ListaPoliticas";
-import ActualizarPolitica from "../../components/ActualizarPolitica";
-import CrearPregunta from "../../components/CrearPregunta";
-import ListaPreguntas from "../../components/ListaPreguntas";
-import ActualizarPregunta from "../../components/ActualizarPregunta";
-import CrearContacto from "../../components/CrearContacto";
-import ListaContactos from "../../components/ListaContactos";
-import ActualizarContacto from "../../components/ActualizarContacto";
-import CrearProducto from "../../components/CrearProducto";
-import ListaProductos from "../../components/ListaProductos";
-import ActualizarProducto from "../../components/ActualizarProducto";
-import CrearInformacion from "../../components/CrearInformacion"; // Nuevo
-import ListaInformacion from "../../components/ListaInformacion"; // Nuevo
-import ActualizarInformacion from "../../components/ActualizarInformacion"; // Nuevo
+import CrearMision from "../components/CrearMision";
+import ListaMisiones from "../components/ListaMisiones";
+import ActualizarMision from "../components/ActualizarMision";
+import CrearVision from "../components/CrearVision";
+import ListaVisiones from "../components/ListaVisiones";
+import ActualizarVision from "../components/ActualizarVision";
+import CrearTermino from "../components/CrearTermino";
+import ListaTerminos from "../components/ListaTerminos";
+import ActualizarTermino from "../components/ActualizarTermino";
+import CrearPolitica from "../components/CrearPolitica";
+import ListaPoliticas from "../components/ListaPoliticas";
+import ActualizarPolitica from "../components/ActualizarPolitica";
+import CrearPregunta from "../components/CrearPregunta";
+import ListaPreguntas from "../components/ListaPreguntas";
+import ActualizarPregunta from "../components/ActualizarPregunta";
+import CrearContacto from "../components/CrearContacto";
+import ListaContactos from "../components/ListaContactos";
+import ActualizarContacto from "../components/ActualizarContacto";
+import CrearProducto from "../components/CrearProducto";
+import ListaProductos from "../components/ListaProductos";
+import ActualizarProducto from "../components/ActualizarProducto";
+import CrearInformacion from "../components/CrearInformacion";
+import ListaInformacion from "../components/ListaInformacion";
+import ActualizarInformacion from "../components/ActualizarInformacion";
 
 const AdminDashboard = () => {
   return (
@@ -55,7 +55,7 @@ const AdminDashboard = () => {
             <Link to="/admin/productos">Productos</Link>
           </li>
           <li>
-            <Link to="/admin/informaciones">Información</Link> {/* Nuevo */}
+            <Link to="/admin/informaciones">Información</Link>
           </li>
         </ul>
       </nav>
@@ -98,7 +98,7 @@ const AdminDashboard = () => {
           <Route path="productos/crear" element={<CrearProducto />} />
           <Route path="productos/actualizar/:id" element={<ActualizarProducto />} />
 
-          {/* Rutas para Información (Nuevo) */}
+          {/* Rutas para Información */}
           <Route path="informaciones" element={<ListaInformacion />} />
           <Route path="informaciones/crear" element={<CrearInformacion />} />
           <Route path="informaciones/actualizar/:id" element={<ActualizarInformacion />} />

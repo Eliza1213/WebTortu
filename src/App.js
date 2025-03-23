@@ -1,5 +1,4 @@
 // src/App.js
-
 import React from "react";
 import { Routes, Route } from "react-router-dom";
 import FormLogin from "./components/FormLogin";
@@ -20,7 +19,6 @@ import ContactoVisualizar from "./components/ContactoVisualizar";
 import PoliticasVisualizar from "./components/PoliticasVisualizar";
 import PreguntasVisualizar from "./components/PreguntasVisualizar";
 import TerminosVisualizar from "./components/TerminosVisualizar";
-
 
 function App() {
   return (
