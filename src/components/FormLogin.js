@@ -19,6 +19,27 @@ const FormLogin = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    // Validar que los campos no estén vacíos
+    if (!formData.email || !formData.password) {
+      Swal.fire({
+        icon: "error",
+        title: "Error",
+        text: "Por favor, completa todos los campos.",
+      });
+      return;
+    }
+
+    // Validar el formato del correo electrónico
+    const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
+    if (!emailRegex.test(formData.email)) {
+      Swal.fire({
+        icon: "error",
+        title: "Error",
+        text: "El formato del correo electrónico no es válido.",
+      });
+      return;
+    }
+
     try {
       const response = await fetch("http://localhost:4000/api/usuarios/login", {
         method: "POST",

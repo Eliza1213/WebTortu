@@ -18,11 +18,10 @@ const FormRegistro = () => {
     terminos: false,
   });
 
-  const [step, setStep] = useState(0); // Paso actual del formulario
-  const [showPassword, setShowPassword] = useState(false); // Mostrar/ocultar contraseña
+  const [step, setStep] = useState(0);
+  const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
 
-  // Manejar cambios en los campos del formulario
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
     setFormData({
@@ -31,12 +30,10 @@ const FormRegistro = () => {
     });
   };
 
-  // Mostrar/ocultar contraseña
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
   };
 
-  // Validar el paso actual del formulario
   const validarPaso = (step) => {
     const {
       nombre,
@@ -127,18 +124,16 @@ const FormRegistro = () => {
     return true;
   };
 
-  // Manejar el clic en el botón "Siguiente"
   const handleNextStep = () => {
     if (validarPaso(step)) {
       setStep(step + 1);
     }
   };
 
-  // Manejar el envío del formulario
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!validarPaso(2)) return; // Validar el último paso antes de enviar
+    if (!validarPaso(2)) return;
 
     try {
       const response = await fetch("http://localhost:4000/api/usuarios/register", {
@@ -158,14 +153,21 @@ const FormRegistro = () => {
       });
 
       const data = await response.json();
-      if (!response.ok) throw new Error(data.error);
+      if (!response.ok) {
+        Swal.fire({
+          icon: "error",
+          title: "Error",
+          text: data.error,
+        });
+        return;
+      }
 
       Swal.fire({
         icon: "success",
         title: "Registro exitoso",
         text: "¡Bienvenido! Por favor, inicia sesión.",
       }).then(() => {
-        navigate("/login"); // Redirigir al login después del registro
+        navigate("/login");
       });
     } catch (error) {
       Swal.fire({
@@ -184,25 +186,25 @@ const FormRegistro = () => {
           <div>
             <label>Nombre/s:</label>
             <input type="text" name="nombre" value={formData.nombre} onChange={handleChange} required />
-  
+
             <label>Apellido Paterno:</label>
             <input type="text" name="ap" value={formData.ap} onChange={handleChange} required />
-  
+
             <label>Apellido Materno:</label>
             <input type="text" name="am" value={formData.am} onChange={handleChange} required />
-  
+
             <button type="button" onClick={handleNextStep}>Siguiente</button>
           </div>
         )}
-  
+
         {step === 1 && (
           <div>
             <label>Nombre de Usuario:</label>
             <input type="text" name="username" value={formData.username} onChange={handleChange} required />
-  
+
             <label>Correo Electrónico:</label>
             <input type="email" name="email" value={formData.email} onChange={handleChange} required />
-  
+
             <label>Contraseña:</label>
             <input
               type={showPassword ? "text" : "password"}
@@ -214,7 +216,7 @@ const FormRegistro = () => {
             <button type="button" onClick={togglePasswordVisibility}>
               {showPassword ? "🙈" : "👁️"}
             </button>
-  
+
             <label>Confirmar Contraseña:</label>
             <input
               type={showPassword ? "text" : "password"}
@@ -223,17 +225,17 @@ const FormRegistro = () => {
               onChange={handleChange}
               required
             />
-  
+
             <button type="button" className="cancel" onClick={() => setStep(0)}>Atrás</button>
             <button type="button" onClick={handleNextStep}>Siguiente</button>
           </div>
         )}
-  
+
         {step === 2 && (
           <div>
             <label>Teléfono:</label>
             <input type="tel" name="telefono" value={formData.telefono} onChange={handleChange} required />
-  
+
             <label>Pregunta Secreta:</label>
             <select name="preguntaSecreta" value={formData.preguntaSecreta} onChange={handleChange} required>
               <option value="">Selecciona una pregunta</option>
@@ -243,10 +245,10 @@ const FormRegistro = () => {
               <option value="nombre-mascota">¿Cuál es el nombre de tu mascota?</option>
               <option value="deporte-favorito">¿Cuál es tu deporte favorito?</option>
             </select>
-  
+
             <label>Respuesta Secreta:</label>
             <input type="text" name="respuestaSecreta" value={formData.respuestaSecreta} onChange={handleChange} required />
-  
+
             <label>
               <input
                 type="checkbox"
@@ -257,7 +259,7 @@ const FormRegistro = () => {
               />
               Acepto los términos y condiciones
             </label>
-  
+
             <button type="button" className="cancel" onClick={() => setStep(1)}>Atrás</button>
             <button type="submit">Registrarse</button>
           </div>
