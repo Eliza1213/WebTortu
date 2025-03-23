@@ -44,16 +44,12 @@ const Home = () => {
           <Link to="terminos" onClick={toggleLeftSlider}>
             Terminos y condiciones
           </Link>
-          
-          
-
         </div>
       </div>
 
       {/* Contenido principal */}
       <div className="home-content">
         <h1>Bienvenido a TORTU-TERRA</h1>
-        
 
         {/* Contenedores para imágenes */}
         <div className="image-container">
