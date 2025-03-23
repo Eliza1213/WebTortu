@@ -18,11 +18,10 @@ const FormRegistro = () => {
     terminos: false,
   });
 
-  const [step, setStep] = useState(0); // Paso actual del formulario
-  const [showPassword, setShowPassword] = useState(false); // Mostrar/ocultar contraseña
+  const [step, setStep] = useState(0);
+  const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
 
-  // Manejar cambios en los campos del formulario
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
     setFormData({
@@ -31,12 +30,10 @@ const FormRegistro = () => {
     });
   };
 
-  // Mostrar/ocultar contraseña
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
   };
 
-  // Validar el paso actual del formulario
   const validarPaso = (step) => {
     const {
       nombre,
@@ -60,60 +57,38 @@ const FormRegistro = () => {
     let errores = [];
 
     if (step === 0) {
-      if (!nombre) {
-        errores.push("El campo 'Nombre/s' es obligatorio.");
-      } else if (!soloLetras.test(nombre)) {
-        errores.push("El campo 'Nombre/s' solo debe contener letras.");
-      }
-      if (!ap) {
-        errores.push("El campo 'Apellido Paterno' es obligatorio.");
-      } else if (!soloLetras.test(ap)) {
-        errores.push("El campo 'Apellido Paterno' solo debe contener letras.");
-      }
-      if (!am) {
-        errores.push("El campo 'Apellido Materno' es obligatorio.");
-      } else if (!soloLetras.test(am)) {
-        errores.push("El campo 'Apellido Materno' solo debe contener letras.");
-      }
+      if (!nombre) errores.push("El campo 'Nombre/s' es obligatorio.");
+      else if (!soloLetras.test(nombre)) errores.push("El campo 'Nombre/s' solo debe contener letras.");
+
+      if (!ap) errores.push("El campo 'Apellido Paterno' es obligatorio.");
+      else if (!soloLetras.test(ap)) errores.push("El campo 'Apellido Paterno' solo debe contener letras.");
+
+      if (!am) errores.push("El campo 'Apellido Materno' es obligatorio.");
+      else if (!soloLetras.test(am)) errores.push("El campo 'Apellido Materno' solo debe contener letras.");
     }
 
     if (step === 1) {
-      if (!username) {
-        errores.push("El campo 'Nombre de Usuario' es obligatorio.");
-      } else if (!letrasYNumeros.test(username)) {
-        errores.push("El campo 'Nombre de Usuario' solo debe contener letras y números.");
-      }
-      if (!email) {
-        errores.push("El campo 'Correo Electrónico' es obligatorio.");
-      } else if (!emailRegex.test(email)) {
-        errores.push("El campo 'Correo Electrónico' no es válido.");
-      }
-      if (!password) {
-        errores.push("El campo 'Contraseña' es obligatorio.");
-      } else if (!passwordRegex.test(password)) {
-        errores.push("La contraseña debe tener al menos 12 caracteres, incluyendo una letra mayúscula, un número y un carácter especial.");
-      }
-      if (!confirmPassword) {
-        errores.push("El campo 'Confirmar Contraseña' es obligatorio.");
-      } else if (password !== confirmPassword) {
-        errores.push("Las contraseñas no coinciden.");
-      }
+      if (!username) errores.push("El campo 'Nombre de Usuario' es obligatorio.");
+      else if (!letrasYNumeros.test(username)) errores.push("El campo 'Nombre de Usuario' solo debe contener letras y números.");
+
+      if (!email) errores.push("El campo 'Correo Electrónico' es obligatorio.");
+      else if (!emailRegex.test(email)) errores.push("El campo 'Correo Electrónico' no es válido.");
+
+      if (!password) errores.push("El campo 'Contraseña' es obligatorio.");
+      else if (!passwordRegex.test(password)) errores.push("La contraseña debe tener al menos 12 caracteres, incluyendo una letra mayúscula, un número y un carácter especial.");
+
+      if (!confirmPassword) errores.push("El campo 'Confirmar Contraseña' es obligatorio.");
+      else if (password !== confirmPassword) errores.push("Las contraseñas no coinciden.");
     }
 
     if (step === 2) {
-      if (!telefono) {
-        errores.push("El campo 'Teléfono' es obligatorio.");
-      } else if (!telefonoRegex.test(telefono)) {
-        errores.push("El campo 'Teléfono' debe contener exactamente 10 dígitos.");
-      }
-      if (!respuestaSecreta) {
-        errores.push("El campo 'Respuesta Secreta' es obligatorio.");
-      } else if (!soloLetras.test(respuestaSecreta)) {
-        errores.push("El campo 'Respuesta Secreta' solo debe contener letras.");
-      }
-      if (!terminos) {
-        errores.push("Debes aceptar los términos y condiciones.");
-      }
+      if (!telefono) errores.push("El campo 'Teléfono' es obligatorio.");
+      else if (!telefonoRegex.test(telefono)) errores.push("El campo 'Teléfono' debe contener exactamente 10 dígitos.");
+
+      if (!respuestaSecreta) errores.push("El campo 'Respuesta Secreta' es obligatorio.");
+      else if (!soloLetras.test(respuestaSecreta)) errores.push("El campo 'Respuesta Secreta' solo debe contener letras.");
+
+      if (!terminos) errores.push("Debes aceptar los términos y condiciones.");
     }
 
     if (errores.length > 0) {
@@ -127,18 +102,45 @@ const FormRegistro = () => {
     return true;
   };
 
-  // Manejar el clic en el botón "Siguiente"
+  const verificarDuplicados = async () => {
+    try {
+      const response = await fetch("http://localhost:4000/api/validar/verificar", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          username: formData.username,
+          email: formData.email,
+          telefono: formData.telefono,
+        }),
+      });
+  
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.error);
+  
+      return true; // No hay duplicados, se puede registrar
+    } catch (error) {
+      Swal.fire({
+        icon: "error",
+        title: "Error de Registro",
+        text: error.message,
+      });
+      return false; // Hay duplicados, no continuar
+    }
+  };
+
   const handleNextStep = () => {
     if (validarPaso(step)) {
       setStep(step + 1);
     }
   };
 
-  // Manejar el envío del formulario
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!validarPaso(2)) return; // Validar el último paso antes de enviar
+    if (!validarPaso(2)) return;
+
+    const esValido = await verificarDuplicados();
+    if (!esValido) return;
 
     try {
       const response = await fetch("http://localhost:4000/api/usuarios/register", {
@@ -165,7 +167,7 @@ const FormRegistro = () => {
         title: "Registro exitoso",
         text: "¡Bienvenido! Por favor, inicia sesión.",
       }).then(() => {
-        navigate("/login"); // Redirigir al login después del registro
+        navigate("/login");
       });
     } catch (error) {
       Swal.fire({
@@ -184,25 +186,27 @@ const FormRegistro = () => {
           <div>
             <label>Nombre/s:</label>
             <input type="text" name="nombre" value={formData.nombre} onChange={handleChange} required />
-  
+
             <label>Apellido Paterno:</label>
             <input type="text" name="ap" value={formData.ap} onChange={handleChange} required />
-  
+
             <label>Apellido Materno:</label>
             <input type="text" name="am" value={formData.am} onChange={handleChange} required />
-  
-            <button type="button" onClick={handleNextStep}>Siguiente</button>
+
+            <button type="button" onClick={handleNextStep} disabled={!formData.nombre || !formData.ap || !formData.am}>
+              Siguiente
+            </button>
           </div>
         )}
-  
+
         {step === 1 && (
           <div>
             <label>Nombre de Usuario:</label>
             <input type="text" name="username" value={formData.username} onChange={handleChange} required />
-  
+
             <label>Correo Electrónico:</label>
             <input type="email" name="email" value={formData.email} onChange={handleChange} required />
-  
+
             <label>Contraseña:</label>
             <input
               type={showPassword ? "text" : "password"}
@@ -214,7 +218,7 @@ const FormRegistro = () => {
             <button type="button" onClick={togglePasswordVisibility}>
               {showPassword ? "🙈" : "👁️"}
             </button>
-  
+
             <label>Confirmar Contraseña:</label>
             <input
               type={showPassword ? "text" : "password"}
@@ -223,17 +227,19 @@ const FormRegistro = () => {
               onChange={handleChange}
               required
             />
-  
+
             <button type="button" className="cancel" onClick={() => setStep(0)}>Atrás</button>
-            <button type="button" onClick={handleNextStep}>Siguiente</button>
+            <button type="button" onClick={handleNextStep} disabled={!formData.username || !formData.email || !formData.password || !formData.confirmPassword}>
+              Siguiente
+            </button>
           </div>
         )}
-  
+
         {step === 2 && (
           <div>
             <label>Teléfono:</label>
             <input type="tel" name="telefono" value={formData.telefono} onChange={handleChange} required />
-  
+
             <label>Pregunta Secreta:</label>
             <select name="preguntaSecreta" value={formData.preguntaSecreta} onChange={handleChange} required>
               <option value="">Selecciona una pregunta</option>
@@ -243,10 +249,10 @@ const FormRegistro = () => {
               <option value="nombre-mascota">¿Cuál es el nombre de tu mascota?</option>
               <option value="deporte-favorito">¿Cuál es tu deporte favorito?</option>
             </select>
-  
+
             <label>Respuesta Secreta:</label>
             <input type="text" name="respuestaSecreta" value={formData.respuestaSecreta} onChange={handleChange} required />
-  
+
             <label>
               <input
                 type="checkbox"
@@ -257,9 +263,11 @@ const FormRegistro = () => {
               />
               Acepto los términos y condiciones
             </label>
-  
+
             <button type="button" className="cancel" onClick={() => setStep(1)}>Atrás</button>
-            <button type="submit">Registrarse</button>
+            <button type="submit" disabled={!formData.telefono || !formData.respuestaSecreta || !formData.terminos}>
+              Registrarse
+            </button>
           </div>
         )}
       </form>

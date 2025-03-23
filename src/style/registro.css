@@ -22,7 +22,7 @@ h2 {
     text-align: center;
     font-size: 1.5rem;
     color: #2a7f68;
-    margin-bottom: 1.5rem;
+    margin-bottom: 0.4rem;
 }
 
 /* Formulario */
@@ -34,7 +34,7 @@ form {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     max-width: 600px;
     width: 100%;
-    margin: 2rem auto;
+    margin-top: 0; /* Quitar margen extra arriba del formulario */
 }
 
 label {
@@ -74,7 +74,7 @@ button {
 
 button[type="submit"] {
     background-color: #2a7f68;
-    color: #ffffff;
+    color: #cccccc;
 }
 
 button[type="submit"]:hover {
