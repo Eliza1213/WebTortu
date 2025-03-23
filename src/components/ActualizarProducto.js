@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
+import Swal from "sweetalert2";
+import "../style/Actualizar.css";
 
 const ActualizarProducto = () => {
-  const { id } = useParams(); // Obtiene el ID del producto desde la URL
-  const navigate = useNavigate(); // Para redirigir después de actualizar
+  const { id } = useParams();
+  const navigate = useNavigate();
   const [nombre, setNombre] = useState("");
   const [descripcion, setDescripcion] = useState("");
   const [precio, setPrecio] = useState("");
@@ -29,21 +31,6 @@ const ActualizarProducto = () => {
     fetchProducto();
   }, [id]);
 
-  const handleImagenChange = (index, value) => {
-    const nuevasImagenes = [...imagenes];
-    nuevasImagenes[index] = value;
-    setImagenes(nuevasImagenes);
-  };
-
-  const handleAgregarImagen = () => {
-    setImagenes([...imagenes, ""]);
-  };
-
-  const handleEliminarImagen = (index) => {
-    const nuevasImagenes = imagenes.filter((_, i) => i !== index);
-    setImagenes(nuevasImagenes);
-  };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -63,65 +50,31 @@ const ActualizarProducto = () => {
       });
 
       if (response.ok) {
-        alert("Producto actualizado con éxito");
-        navigate("/admin/productos/listar"); // Redirige a la lista de productos
+        Swal.fire({
+          icon: "success",
+          title: "Éxito",
+          text: "Producto actualizado con éxito",
+        }).then(() => navigate("/admin/productos/listar"));
       } else {
-        alert("Error al actualizar producto");
+        throw new Error("Error al actualizar producto");
       }
     } catch (error) {
-      console.error("Error en la actualización:", error);
+      Swal.fire({
+        icon: "error",
+        title: "Error",
+        text: "No se pudo actualizar el producto",
+      });
     }
   };
 
   return (
-    <div className="productos-container">
+    <div className="contactos-container">
       <h2>Actualizar Producto</h2>
       <form onSubmit={handleSubmit}>
-        <input
-          type="text"
-          placeholder="Nombre"
-          value={nombre}
-          onChange={(e) => setNombre(e.target.value)}
-          required
-        />
-        <textarea
-          placeholder="Descripción"
-          value={descripcion}
-          onChange={(e) => setDescripcion(e.target.value)}
-          required
-        />
-        <input
-          type="number"
-          placeholder="Precio"
-          value={precio}
-          onChange={(e) => setPrecio(e.target.value)}
-          required
-        />
-        <input
-          type="number"
-          placeholder="Stock"
-          value={stock}
-          onChange={(e) => setStock(e.target.value)}
-          required
-        />
-        <h4>Imágenes</h4>
-        {imagenes.map((imagen, index) => (
-          <div key={index}>
-            <input
-              type="text"
-              placeholder={`URL de la imagen ${index + 1}`}
-              value={imagen}
-              onChange={(e) => handleImagenChange(index, e.target.value)}
-              required
-            />
-            <button type="button" onClick={() => handleEliminarImagen(index)}>
-              Eliminar
-            </button>
-          </div>
-        ))}
-        <button type="button" onClick={handleAgregarImagen}>
-          Agregar Imagen
-        </button>
+        <input type="text" placeholder="Nombre" value={nombre} onChange={(e) => setNombre(e.target.value)} required />
+        <textarea placeholder="Descripción" value={descripcion} onChange={(e) => setDescripcion(e.target.value)} required />
+        <input type="number" placeholder="Precio" value={precio} onChange={(e) => setPrecio(e.target.value)} required />
+        <input type="number" placeholder="Stock" value={stock} onChange={(e) => setStock(e.target.value)} required />
         <button type="submit">Actualizar Producto</button>
       </form>
     </div>

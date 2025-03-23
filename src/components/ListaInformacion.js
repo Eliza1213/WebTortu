@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import Swal from "sweetalert2"; // Importa SweetAlert2
+import "../style/Lista.css"; // Importa el archivo CSS compartido
 
 const ListarInformacion = () => {
   const [informaciones, setInformaciones] = useState([]);
@@ -22,7 +24,19 @@ const ListarInformacion = () => {
 
   // Función para eliminar información con confirmación
   const handleEliminar = async (id) => {
-    if (window.confirm("¿Estás seguro de que deseas eliminar esta información?")) {
+    // Mostrar confirmación con SweetAlert2
+    const confirmacion = await Swal.fire({
+      title: "¿Estás seguro?",
+      text: "¡No podrás revertir esto!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#003366", // Azul marino
+      cancelButtonColor: "#dc3545", // Rojo
+      confirmButtonText: "Sí, eliminar",
+      cancelButtonText: "Cancelar",
+    });
+
+    if (confirmacion.isConfirmed) {
       try {
         const response = await fetch(`http://localhost:4000/api/informaciones/${id}`, {
           method: "DELETE",
@@ -30,26 +44,50 @@ const ListarInformacion = () => {
 
         if (response.ok) {
           setInformaciones(informaciones.filter((info) => info._id !== id));
+
+          // Mostrar alerta de éxito con SweetAlert2
+          Swal.fire({
+            title: "¡Eliminado!",
+            text: "La información ha sido eliminada.",
+            icon: "success",
+            confirmButtonColor: "#003366", // Azul marino
+          });
         } else {
           console.error("Error al eliminar la información");
+
+          // Mostrar alerta de error con SweetAlert2
+          Swal.fire({
+            title: "Error",
+            text: "Hubo un problema al eliminar la información.",
+            icon: "error",
+            confirmButtonColor: "#003366", // Azul marino
+          });
         }
       } catch (error) {
         console.error("Error:", error);
+
+        // Mostrar alerta de error con SweetAlert2
+        Swal.fire({
+          title: "Error",
+          text: "Hubo un problema al eliminar la información.",
+          icon: "error",
+          confirmButtonColor: "#003366", // Azul marino
+        });
       }
     }
   };
 
   return (
-    <div className="informacion-container">
-      <h2 className="informacion-titulo">Información sobre Tortugas</h2>
+    <div className="preguntas-container">
+      <h2 className="preguntas-titulo">Información sobre Tortugas</h2>
       {/* Botón para crear nueva información */}
       <Link to="/admin/informaciones/crear" className="btn-crear">
         ➕ Crear Nueva Información
       </Link>
       {informaciones.length === 0 ? (
-        <p className="informacion-vacio">No hay información disponible</p>
+        <p className="preguntas-vacio">No hay información disponible</p>
       ) : (
-        <table className="informacion-tabla">
+        <table className="preguntas-tabla">
           <thead>
             <tr>
               <th>Especie</th>
@@ -60,7 +98,7 @@ const ListarInformacion = () => {
           </thead>
           <tbody>
             {informaciones.map((info) => (
-              <tr key={info._id} className="informacion-fila">
+              <tr key={info._id} className="pregunta-fila">
                 <td>{info.especie}</td>
                 <td>{info.alimentacion}</td>
                 <td>{info.temperatura_ideal}</td>

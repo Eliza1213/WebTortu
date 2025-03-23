@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import Swal from "sweetalert2"; // Importa SweetAlert2
+import "../style/Crear.css"; // Importa el archivo CSS
 
 const CrearProducto = () => {
   const [nombre, setNombre] = useState("");
@@ -10,26 +12,51 @@ const CrearProducto = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const newProducto = { 
-      nombre, 
-      descripcion, 
-      precio: parseFloat(precio), 
-      stock: parseInt(stock), 
-      imagenes 
+    const newProducto = {
+      nombre,
+      descripcion,
+      precio: parseFloat(precio),
+      stock: parseInt(stock),
+      imagenes,
     };
 
-    const response = await fetch("http://localhost:4000/api/productos", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(newProducto),
-    });
+    try {
+      const response = await fetch("http://localhost:4000/api/productos", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(newProducto),
+      });
 
-    if (response.ok) {
-      alert("Producto creado con éxito");
-    } else {
-      alert("Error al crear producto");
+      if (response.ok) {
+        // Mostrar alerta de éxito con SweetAlert2
+        Swal.fire({
+          title: "¡Éxito!",
+          text: "Producto creado con éxito",
+          icon: "success",
+          confirmButtonText: "Aceptar",
+        });
+
+        // Limpiar el formulario después de crear el producto
+        setNombre("");
+        setDescripcion("");
+        setPrecio("");
+        setStock("");
+        setImagenes([""]);
+      } else {
+        throw new Error("Error al crear producto");
+      }
+    } catch (error) {
+      console.error("Error en la creación de producto:", error);
+
+      // Mostrar alerta de error con SweetAlert2
+      Swal.fire({
+        title: "Error",
+        text: error.message || "Hubo un problema al crear el producto",
+        icon: "error",
+        confirmButtonText: "Aceptar",
+      });
     }
   };
 
@@ -44,7 +71,7 @@ const CrearProducto = () => {
   };
 
   return (
-    <div className="productos-container">
+    <div className="visiones-container"> {/* Usamos la misma clase CSS */}
       <h2>Crear Producto</h2>
       <form onSubmit={handleSubmit}>
         <input

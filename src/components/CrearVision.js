@@ -1,10 +1,13 @@
-// components/CrearVision.js
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom"; // Importa useNavigate
+import Swal from "sweetalert2"; // Importa SweetAlert2
+import "../style/Crear.css"; // Importa el archivo CSS
 
 const CrearVision = () => {
   const [titulo, setTitulo] = useState("");
   const [descripcion, setDescripcion] = useState("");
   const [error, setError] = useState("");
+  const navigate = useNavigate(); // Inicializa useNavigate
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -21,22 +24,37 @@ const CrearVision = () => {
       });
 
       if (response.ok) {
-        alert("Visión creada con éxito");
-        setTitulo("");
-        setDescripcion("");
+        // Mostrar alerta de éxito con SweetAlert2
+        await Swal.fire({
+          title: "¡Éxito!",
+          text: "Visión creada con éxito",
+          icon: "success",
+          confirmButtonText: "Aceptar",
+        });
+
+        // Redirigir a la lista de visiones
+        navigate("/admin/visiones/listar");
       } else {
         throw new Error("Error al crear visión");
       }
     } catch (error) {
       console.error("Error en la creación de visión:", error);
       setError(error.message);
+
+      // Mostrar alerta de error con SweetAlert2
+      Swal.fire({
+        title: "Error",
+        text: error.message || "Hubo un problema al crear la visión",
+        icon: "error",
+        confirmButtonText: "Aceptar",
+      });
     }
   };
 
   return (
     <div className="visiones-container">
       <h2>Crear Visión</h2>
-      {error && <p style={{ color: "red" }}>{error}</p>}
+      {error && <p>{error}</p>}
       <form onSubmit={handleSubmit}>
         <input
           type="text"

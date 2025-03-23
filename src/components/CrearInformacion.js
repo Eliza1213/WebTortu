@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import Swal from "sweetalert2"; // Importa SweetAlert2
+import "../style/Crear.css"; // Importa el archivo CSS
 
 const CrearInformacion = () => {
   const [especie, setEspecie] = useState("");
@@ -20,23 +22,49 @@ const CrearInformacion = () => {
       imagen,
     };
 
-    const response = await fetch("http://localhost:4000/api/informaciones", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(nuevaInformacion),
-    });
+    try {
+      const response = await fetch("http://localhost:4000/api/informaciones", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(nuevaInformacion),
+      });
 
-    if (response.ok) {
-      alert("Información creada con éxito");
-    } else {
-      alert("Error al crear la información");
+      if (response.ok) {
+        // Mostrar alerta de éxito con SweetAlert2
+        Swal.fire({
+          title: "¡Éxito!",
+          text: "Información creada con éxito",
+          icon: "success",
+          confirmButtonText: "Aceptar",
+        });
+
+        // Limpiar el formulario después de crear la información
+        setEspecie("");
+        setAlimentacion("");
+        setTemperaturaIdeal("");
+        setHumedadIdeal("");
+        setDescripcion("");
+        setImagen("");
+      } else {
+        throw new Error("Error al crear la información");
+      }
+    } catch (error) {
+      console.error("Error en la creación de información:", error);
+
+      // Mostrar alerta de error con SweetAlert2
+      Swal.fire({
+        title: "Error",
+        text: error.message || "Hubo un problema al crear la información",
+        icon: "error",
+        confirmButtonText: "Aceptar",
+      });
     }
   };
 
   return (
-    <div className="informacion-container">
+    <div className="visiones-container"> {/* Usamos la misma clase CSS */}
       <h2>Crear Información</h2>
       <form onSubmit={handleSubmit}>
         <input

@@ -1,7 +1,7 @@
-// components/ListarMisiones.js
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import "../style/ListaMisiones.css"; // Importa el archivo de estilos
+import Swal from "sweetalert2"; // Importa SweetAlert2
+import "../style/Lista.css"; // Importa el archivo CSS compartido
 
 const ListarMisiones = () => {
   const [misiones, setMisiones] = useState([]);
@@ -23,7 +23,19 @@ const ListarMisiones = () => {
   }, []);
 
   const handleEliminar = async (id) => {
-    if (window.confirm("¿Estás seguro de que deseas eliminar esta misión?")) {
+    // Mostrar confirmación con SweetAlert2
+    const confirmacion = await Swal.fire({
+      title: "¿Estás seguro?",
+      text: "¡No podrás revertir esto!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#003366", // Azul marino
+      cancelButtonColor: "#dc3545", // Rojo
+      confirmButtonText: "Sí, eliminar",
+      cancelButtonText: "Cancelar",
+    });
+
+    if (confirmacion.isConfirmed) {
       try {
         const response = await fetch(`http://localhost:4000/api/misiones/${id}`, {
           method: "DELETE",
@@ -31,26 +43,50 @@ const ListarMisiones = () => {
 
         if (response.ok) {
           setMisiones(misiones.filter((mision) => mision._id !== id));
+
+          // Mostrar alerta de éxito con SweetAlert2
+          Swal.fire({
+            title: "¡Eliminado!",
+            text: "La misión ha sido eliminada.",
+            icon: "success",
+            confirmButtonColor: "#003366", // Azul marino
+          });
         } else {
           console.error("Error al eliminar la misión");
+
+          // Mostrar alerta de error con SweetAlert2
+          Swal.fire({
+            title: "Error",
+            text: "Hubo un problema al eliminar la misión.",
+            icon: "error",
+            confirmButtonColor: "#003366", // Azul marino
+          });
         }
       } catch (error) {
         console.error("Error:", error);
+
+        // Mostrar alerta de error con SweetAlert2
+        Swal.fire({
+          title: "Error",
+          text: "Hubo un problema al eliminar la misión.",
+          icon: "error",
+          confirmButtonColor: "#003366", // Azul marino
+        });
       }
     }
   };
 
   return (
-    <div className="misiones-container">
-      <h2 className="misiones-titulo">Misiones</h2>
+    <div className="preguntas-container">
+      <h2 className="preguntas-titulo">Listado de Misiones</h2>
       {/* Botón para crear una nueva misión */}
       <Link to="/admin/misiones/crear" className="btn-crear">
         ➕ Crear Nueva Misión
       </Link>
       {misiones.length === 0 ? (
-        <p className="misiones-vacio">No hay misiones disponibles</p>
+        <p className="preguntas-vacio">No hay misiones disponibles</p>
       ) : (
-        <table className="misiones-tabla">
+        <table className="preguntas-tabla">
           <thead>
             <tr>
               <th>Título</th>
@@ -59,7 +95,7 @@ const ListarMisiones = () => {
           </thead>
           <tbody>
             {misiones.map((mision) => (
-              <tr key={mision._id} className="mision-fila">
+              <tr key={mision._id} className="pregunta-fila">
                 <td>{mision.titulo}</td>
                 <td className="acciones">
                   <Link

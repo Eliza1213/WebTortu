@@ -55,7 +55,7 @@ const AdminDashboard = () => {
             <Link to="/admin/productos">Productos</Link>
           </li>
           <li>
-            <Link to="/admin/informaciones">Información</Link> {/* Nuevo */}
+            <Link to="/admin/informaciones">Información</Link>
           </li>
         </ul>
       </nav>
@@ -98,7 +98,7 @@ const AdminDashboard = () => {
           <Route path="productos/crear" element={<CrearProducto />} />
           <Route path="productos/actualizar/:id" element={<ActualizarProducto />} />
 
-          {/* Rutas para Información (Nuevo) */}
+          {/* Rutas para Información */}
           <Route path="informaciones" element={<ListaInformacion />} />
           <Route path="informaciones/crear" element={<CrearInformacion />} />
           <Route path="informaciones/actualizar/:id" element={<ActualizarInformacion />} />
