@@ -1,153 +1,106 @@
 /* Estilos generales */
 .home-container {
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  min-height: 100vh; /* Ocupa toda la altura de la pantalla */
-  width: 100vw; /* Ocupa todo el ancho de la pantalla */
-  background-color: #f7fff7; /* Fondo blanco verdoso */
-  color: #1a535c; /* Verde oscuro */
   position: relative;
+  height: 100vh;
   overflow: hidden;
-}
-
-/* Contenedor principal */
-.home-content {
-  position: relative;
-  z-index: 2;
-  text-align: center;
-  padding: 2rem;
-  background: rgba(255, 255, 255, 0.8); /* Fondo semi-transparente */
-  border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  width: 90%; /* Ocupa el 90% del ancho del contenedor */
-  max-width: 1200px; /* Ancho máximo para evitar que se estire demasiado */
-}
-
-.home-content h1 {
-  font-size: 3rem;
-  margin-bottom: 1rem;
-  color: #1a535c; /* Verde oscuro */
-}
-
-.home-content p {
-  font-size: 1.2rem;
-  margin-bottom: 2rem;
-  color: #1a535c; /* Verde oscuro */
-}
-
-/* Botones */
-.home-buttons {
-  display: flex;
-  gap: 1rem;
-  justify-content: center;
-}
-
-.home-button {
-  text-decoration: none;
-  color: #f7fff7; /* Blanco verdoso */
-  font-size: 1rem;
-  font-weight: 600;
-  padding: 0.75rem 1.5rem;
-  border-radius: 5px;
-  background-color: #4ecdc4; /* Verde turquesa */
-  transition: all 0.3s ease;
-  border: 2px solid transparent;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-.home-button:hover {
-  background-color: #228B22; /* Verde fuerte */
-  transform: translateY(-3px);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  font-family: Arial, sans-serif;
 }
 
 /* Botón para abrir el deslizador izquierdo */
-.slider-toggle.left {
-  position: fixed;
-  top: 1rem;
-  left: 1rem;
-  background-color: #4ecdc4; /* Verde turquesa */
+.slider-toggle {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  background: #2c3e50;
+  color: white;
   border: none;
-  color: #f7fff7; /* Blanco verdoso */
+  padding: 10px 15px;
   font-size: 1.5rem;
-  padding: 0.5rem 1rem;
-  border-radius: 5px;
   cursor: pointer;
-  z-index: 1001; /* Encima de todo */
-  transition: background-color 0.3s ease;
+  transition: 0.3s;
+  z-index: 100;
+  border-radius: 5px;
 }
 
-.slider-toggle.left:hover {
-  background-color: #228B22; /* Verde fuerte */
+.slider-toggle.hidden {
+  display: none;
 }
 
-/* Deslizador izquierdo */
+/* Estilos del deslizador izquierdo */
 .left-slider {
   position: fixed;
   top: 0;
-  left: -300px; /* Oculto por defecto */
-  width: 300px;
-  height: 100vh;
-  background-color: #1a535c; /* Verde oscuro */
-  box-shadow: 2px 0 8px rgba(0, 0, 0, 0.2);
-  transition: left 0.3s ease;
-  z-index: 1000; /* Debajo del botón de toggle */
+  left: -250px;
+  width: 250px;
+  height: 90%; /* Altura reducida */
+  top: 6%; 
+  background: #34495e;
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.3);
+  transition: left 0.3s ease-in-out;
+  display: flex;
+  flex-direction: column;
+  padding-top: 60px;
+  z-index: 99;
 }
 
 .left-slider.open {
-  left: 0; /* Mostrar deslizador */
+  left: 0;
 }
 
-/* Contenido del deslizador */
-.slider-content {
-  padding: 2rem;
-  color: #f7fff7; /* Blanco verdoso */
-}
-
+/* Estilos del título del menú */
 .slider-content h2 {
-  margin-bottom: 1.5rem;
-  font-size: 1.5rem;
+  color: white;
+  text-align: center;
+  white-space: nowrap; /* Mantén el texto en una sola línea */
+  overflow: visible; /* Asegúrate de que el texto no se recorte */
+  text-overflow: unset; /* Elimina el recorte del texto */
+  max-width: 100%; /* Asegura que el texto ocupe todo el ancho disponible */
+  padding: 0 10px; /* Añade un poco de padding a los lados */
+  margin: 0; /* Elimina cualquier margen predeterminado */
+  font-size: 1.5rem; /* Ajusta el tamaño de la fuente si es necesario */
 }
 
+/* Estilos de los enlaces del menú */
 .slider-content a {
   display: block;
-  color: #f7fff7;
+  color: white;
   text-decoration: none;
-  padding: 0.5rem 0;
-  transition: color 0.3s ease;
+  padding: 10px 20px;
+  transition: background 0.3s;
 }
 
 .slider-content a:hover {
-  color: #4ecdc4; /* Verde turquesa */
+  background: #1abc9c;
 }
 
-/* Contenedores para imágenes */
+/* Contenido principal */
+.home-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  width: 100%;
+  padding: 20px;
+}
+
+.home-content h1 {
+  font-size: 2.5rem;
+  color: #2c3e50;
+  margin-bottom: 20px;
+}
+
+/* Contenedores de imagen */
 .image-container {
-  margin: 2rem 0;
-  padding: 1rem;
-  background-color: #e0f7fa; /* Fondo claro para contenedores */
+  width: 300px;
+  height: 200px;
+  background: #ecf0f1;
   border-radius: 10px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-/* Responsive */
-@media (max-width: 768px) {
-  .home-content h1 {
-    font-size: 2rem;
-  }
-
-  .home-content p {
-    font-size: 1rem;
-  }
-
-  .left-slider {
-    width: 100%;
-    left: -100%; /* Oculto por defecto en móviles */
-  }
-
-  .left-slider.open {
-    left: 0; /* Mostrar deslizador en móviles */
-  }
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }

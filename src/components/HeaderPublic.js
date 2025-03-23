@@ -1,16 +1,36 @@
-// HeaderPublic.js
-import { Link } from "react-router-dom";
-import { useState } from "react";
+import { Link, useLocation } from "react-router-dom";
+import { useState, useEffect, useRef } from "react";
 import { Menu, X } from "lucide-react";
 import "../style/Header.css";
 
 const HeaderPublic = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   const [submenuOpen, setSubmenuOpen] = useState(null);
+  const location = useLocation();
+  const dropdownRef = useRef(null);
 
   const toggleSubmenu = (menu) => {
     setSubmenuOpen(submenuOpen === menu ? null : menu);
   };
+
+  const handleClickOutside = (event) => {
+    if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+      setSubmenuOpen(null);
+    }
+  };
+
+  // Cerrar los dropdowns al cambiar de página
+  useEffect(() => {
+    setSubmenuOpen(null);
+    setMenuOpen(false);
+  }, [location]);
+
+  useEffect(() => {
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
   return (
     <header className="header">
@@ -20,13 +40,12 @@ const HeaderPublic = () => {
       </div>
 
       {/* Menú principal en pantallas grandes */}
-      <nav className="nav">
-        
+      <nav className="nav" ref={dropdownRef}>
         <Link to="/" className="nav-link">Inicio</Link>
 
         <div className="dropdown">
           <button className="nav-link" onClick={() => toggleSubmenu("sesion")}>
-           INICIAR SESIÓN
+            INICIAR SESIÓN
           </button>
           <ul className={`dropdown-menu ${submenuOpen === "sesion" ? "open" : ""}`}>
             <li><Link to="/registro" className="dropdown-item">Formulario de registro</Link></li>
@@ -81,4 +100,4 @@ const HeaderPublic = () => {
   );
 };
 
-export default HeaderPublic;  
+export default HeaderPublic;
