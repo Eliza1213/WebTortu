@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import '../style/visionesPublica.css';
+import Footer from "./Footer"; // Importa el Footer
 
 const MisionesVisualizar = () => {
   const [misiones, setMisiones] = useState([]);
@@ -12,21 +13,24 @@ const MisionesVisualizar = () => {
   }, []);
 
   return (
-    <div className="misiones-container">
-      <h2 className="misiones-title">Nuestra Misión</h2>
-      {misiones.length === 0 ? (
-        <p className="no-misiones">No hay misiones disponibles</p>
-      ) : (
-        <div className="misiones-grid">
-          {misiones.map((mision) => (
-            <div key={mision._id} className="mision-card">
-              <h3 className="mision-titulo">{mision.titulo}</h3>
-              <p className="mision-descripcion">{mision.descripcion}</p>
-            </div>
-          ))}
-        </div>
-      )}
-    </div>
+    <>
+      <div className="misiones-container">
+        <h2 className="misiones-title">Nuestra Misión</h2>
+        {misiones.length === 0 ? (
+          <p className="no-misiones">No hay misiones disponibles</p>
+        ) : (
+          <div className="misiones-grid">
+            {misiones.map((mision) => (
+              <div key={mision._id} className="mision-card">
+                <h3 className="mision-titulo">{mision.titulo}</h3>
+                <p className="mision-descripcion">{mision.descripcion}</p>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+      <Footer /> {/* Agrega el Footer aquí */}
+    </>
   );
 };
 

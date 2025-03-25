@@ -1,19 +1,21 @@
 import { useEffect, useState } from "react";
 import '../style/visionesPublica.css';
+import Footer from "./Footer"; // Importa el Footer
 
 const TerminosVisualizar = () => {
-    const [terminos, setTerminos] = useState([]);
-  
-    useEffect(() => {
-      fetch("http://localhost:4000/api/terminos") // Llamada al backend
-        .then((response) => response.json())
-        .then((data) => setTerminos(data))
-        .catch((error) => console.error("Error al obtener Términos:", error));
-    }, []);
-  
-    return (
+  const [terminos, setTerminos] = useState([]);
+
+  useEffect(() => {
+    fetch("http://localhost:4000/api/terminos") // Llamada al backend
+      .then((response) => response.json())
+      .then((data) => setTerminos(data))
+      .catch((error) => console.error("Error al obtener Términos:", error));
+  }, []);
+
+  return (
+    <>
       <div className="visiones-container">
-        <h2 className="visiones-title">Términos y condiciones</h2>
+        <h2 className="visiones-title">Términos y Condiciones</h2>
         {terminos.length === 0 ? (
           <p>No hay Términos disponibles</p>
         ) : (
@@ -27,7 +29,9 @@ const TerminosVisualizar = () => {
           </ul>
         )}
       </div>
-    );
-  };
-  
-  export default TerminosVisualizar;
+      <Footer /> {/* Agrega el Footer aquí */}
+    </>
+  );
+};
+
+export default TerminosVisualizar;

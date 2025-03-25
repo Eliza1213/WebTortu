@@ -1,6 +1,6 @@
 import "../style/Admin.css";
 import React from "react";
-import { Link, Routes, Route } from "react-router-dom";
+import { Link, Routes, Route, useNavigate } from "react-router-dom";
 import CrearMision from "../components/CrearMision";
 import ListaMisiones from "../components/ListaMisiones";
 import ActualizarMision from "../components/ActualizarMision";
@@ -22,40 +22,93 @@ import ActualizarContacto from "../components/ActualizarContacto";
 import CrearProducto from "../components/CrearProducto";
 import ListaProductos from "../components/ListaProductos";
 import ActualizarProducto from "../components/ActualizarProducto";
-import CrearInformacion from "../components/CrearInformacion"; // Nuevo
-import ListaInformacion from "../components/ListaInformacion"; // Nuevo
-import ActualizarInformacion from "../components/ActualizarInformacion"; // Nuevo
+import CrearInformacion from "../components/CrearInformacion";
+import ListaInformacion from "../components/ListaInformacion";
+import ActualizarInformacion from "../components/ActualizarInformacion";
+
+import UsuariosAdmin from "../page/UsuariosAdmin";
+
+import Swal from "sweetalert2";
 
 const AdminDashboard = () => {
+  const nombreUsuario = localStorage.getItem("nombre") || "Administrador";
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    Swal.fire({
+      title: "¿Cerrar sesión?",
+      text: "¿Estás seguro que deseas salir del panel de administración?",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Sí, cerrar sesión",
+      cancelButtonText: "Cancelar",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        localStorage.removeItem("token");
+        localStorage.removeItem("rol");
+        localStorage.removeItem("nombre");
+        navigate("/login");
+        Swal.fire("Sesión cerrada", "Has cerrado sesión correctamente.", "success");
+      }
+    });
+  };
+
   return (
     <div className="admin-container">
       {/* Menú de navegación */}
       <nav className="admin-nav">
-        <h1>Panel de Administración</h1>
+        <div className="admin-header">
+          <h1>Panel de Administración</h1>
+        </div>
+
         <ul className="nav-links">
           <li>
-            <Link to="/admin/misiones">Misiones</Link>
+            <Link to="/admin/misiones">
+              <i className="fas fa-bullseye"></i> Misiones
+            </Link>
           </li>
           <li>
-            <Link to="/admin/visiones">Visiones</Link>
+            <Link to="/admin/visiones">
+              <i className="fas fa-eye"></i> Visiones
+            </Link>
           </li>
           <li>
-            <Link to="/admin/terminos">Términos</Link>
+            <Link to="/admin/terminos">
+              <i className="fas fa-file-contract"></i> Términos
+            </Link>
           </li>
           <li>
-            <Link to="/admin/politicas">Políticas</Link>
+            <Link to="/admin/politicas">
+              <i className="fas fa-shield-alt"></i> Políticas
+            </Link>
           </li>
           <li>
-            <Link to="/admin/preguntas">Preguntas</Link>
+            <Link to="/admin/preguntas">
+              <i className="fas fa-question-circle"></i> Preguntas
+            </Link>
           </li>
           <li>
-            <Link to="/admin/contactos">Contactos</Link>
+            <Link to="/admin/contactos">
+              <i className="fas fa-address-book"></i> Contactos
+            </Link>
           </li>
           <li>
-            <Link to="/admin/productos">Productos</Link>
+            <Link to="/admin/productos">
+              <i className="fas fa-box-open"></i> Productos
+            </Link>
           </li>
           <li>
-            <Link to="/admin/informaciones">Información</Link>
+            <Link to="/admin/informaciones">
+              <i className="fas fa-info-circle"></i> Información
+            </Link>
+          </li>
+          {/* 📌 NUEVO: Botón para Actualizar Roles */}
+          <li>
+            <Link to="/admin/usuarios">
+              <i className="fas fa-users-cog"></i> Actualizar Roles
+            </Link>
           </li>
         </ul>
       </nav>
@@ -102,6 +155,10 @@ const AdminDashboard = () => {
           <Route path="informaciones" element={<ListaInformacion />} />
           <Route path="informaciones/crear" element={<CrearInformacion />} />
           <Route path="informaciones/actualizar/:id" element={<ActualizarInformacion />} />
+
+          {/* 📌 NUEVA RUTA: Página de Usuarios/Roles */}
+          <Route path="usuarios/*" element={<UsuariosAdmin />} />
+      
         </Routes>
       </div>
     </div>

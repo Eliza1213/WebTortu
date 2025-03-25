@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import Swal from "sweetalert2";
 import '../style/login.css';
 
@@ -7,6 +7,7 @@ const FormLogin = () => {
   const [formData, setFormData] = useState({ email: "", password: "" });
   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
+  const location = useLocation();
 
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
@@ -29,41 +30,57 @@ const FormLogin = () => {
       const data = await response.json();
       if (!response.ok) throw new Error(data.error);
 
+      // Guardar datos en localStorage
       localStorage.setItem("token", data.token);
       localStorage.setItem("rol", data.rol);
       localStorage.setItem("nombre", data.nombre);
 
       Swal.fire({ icon: "success", title: "Inicio de sesión exitoso" });
 
+      // Redirección basada en el rol
       if (data.rol === "admin") {
-        navigate("/admin");
+        navigate(location.state?.from?.pathname || "/admin", { replace: true });
       } else {
-        navigate("/usuario");
+        navigate("/usuario", { replace: true });
       }
+
     } catch (error) {
       Swal.fire({ icon: "error", title: "Error", text: error.message });
     }
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <label>Correo Electrónico:</label>
-      <input type="email" name="email" placeholder="Correo electrónico" onChange={handleChange} required />
-      <label>Contraseña:</label>
-      <div style={{ display: "flex", alignItems: "center" }}>
-        <input
-          type={showPassword ? "text" : "password"}
-          name="password"
-          placeholder="Contraseña"
-          onChange={handleChange}
-          required
-        />
-        <button type="button" onClick={togglePasswordVisibility}>
-          {showPassword ? "🙈" : "👁️"}
-        </button>
-      </div>
-      <button type="submit">Iniciar sesión</button>
-    </form>
+    <div className="login-container">
+      <h1>Formulario de Login</h1>
+      <form onSubmit={handleSubmit} className="login-form">
+        <div className="form-group">
+          <label>Correo Electrónico:</label>
+          <input
+            type="email"
+            name="email"
+            placeholder="Correo electrónico"
+            onChange={handleChange}
+            required
+          />
+        </div>
+        <div className="form-group">
+          <label>Contraseña:</label>
+          <div className="password-input">
+            <input
+              type={showPassword ? "text" : "password"}
+              name="password"
+              placeholder="Contraseña"
+              onChange={handleChange}
+              required
+            />
+            <button type="button" onClick={togglePasswordVisibility} className="toggle-password">
+              {showPassword ? "🙈" : "👁️"}
+            </button>
+          </div>
+        </div>
+        <button type="submit" className="submit-button">Iniciar sesión</button>
+      </form>
+    </div>
   );
 };
 

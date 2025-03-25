@@ -1,106 +1,112 @@
 /* Estilos generales */
 .home-container {
   display: flex;
-  position: relative;
-  height: 100vh;
-  overflow: hidden;
-  font-family: Arial, sans-serif;
+  flex-direction: column;
+  min-height: 100vh;
 }
 
-/* Botón para abrir el deslizador izquierdo */
-.slider-toggle {
-  position: absolute;
-  top: 20px;
-  left: 20px;
-  background: #2c3e50;
+.home-content {
+  flex: 1;
+  padding: 2rem;
+  text-align: center;
+}
+
+/* Carrusel */
+.carrusel-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 2rem 0;
+  position: relative;
+}
+
+.carrusel {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  perspective: 1000px;
+}
+
+.nav-button {
+  background: #4CAF50;
   color: white;
   border: none;
-  padding: 10px 15px;
+  padding: 0.5rem 1rem;
   font-size: 1.5rem;
   cursor: pointer;
-  transition: 0.3s;
-  z-index: 100;
+  border-radius: 50%;
+  margin: 0 1rem;
+  transition: all 0.3s;
+}
+
+.nav-button:hover {
+  background: #45a049;
+  transform: scale(1.1);
+}
+
+/* Productos */
+.producto {
+  transition: all 0.5s ease;
+}
+
+.producto-card {
+  background: white;
+  border-radius: 10px;
+  padding: 1rem;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  transition: all 0.3s;
+}
+
+.producto-card.central {
+  transform: scale(1.1);
+  z-index: 10;
+}
+
+.producto-card:not(.central) {
+  opacity: 0.7;
+  transform: scale(0.9);
+}
+
+.producto-imagen {
+  width: 100%;
+  max-width: 200px;
+  height: auto;
+  border-radius: 8px;
+  object-fit: cover;
+}
+
+.detalles {
+  margin-top: 1rem;
+}
+
+.precio {
+  font-weight: bold;
+  color: #4CAF50;
+  font-size: 1.2rem;
+}
+
+.comprar-btn {
+  background: #4CAF50;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
   border-radius: 5px;
-}
-
-.slider-toggle.hidden {
-  display: none;
-}
-
-/* Estilos del deslizador izquierdo */
-.left-slider {
-  position: fixed;
-  top: 0;
-  left: -250px;
-  width: 250px;
-  height: 90%; /* Altura reducida */
-  top: 6%; 
-  background: #34495e;
-  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.3);
-  transition: left 0.3s ease-in-out;
-  display: flex;
-  flex-direction: column;
-  padding-top: 60px;
-  z-index: 99;
-}
-
-.left-slider.open {
-  left: 0;
-}
-
-/* Estilos del título del menú */
-.slider-content h2 {
-  color: white;
-  text-align: center;
-  white-space: nowrap; /* Mantén el texto en una sola línea */
-  overflow: visible; /* Asegúrate de que el texto no se recorte */
-  text-overflow: unset; /* Elimina el recorte del texto */
-  max-width: 100%; /* Asegura que el texto ocupe todo el ancho disponible */
-  padding: 0 10px; /* Añade un poco de padding a los lados */
-  margin: 0; /* Elimina cualquier margen predeterminado */
-  font-size: 1.5rem; /* Ajusta el tamaño de la fuente si es necesario */
-}
-
-/* Estilos de los enlaces del menú */
-.slider-content a {
-  display: block;
-  color: white;
-  text-decoration: none;
-  padding: 10px 20px;
+  cursor: pointer;
+  margin-top: 0.5rem;
   transition: background 0.3s;
 }
 
-.slider-content a:hover {
-  background: #1abc9c;
+.comprar-btn:hover {
+  background: #45a049;
 }
 
-/* Contenido principal */
-.home-content {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
+/* Estados */
+.loading, .error {
   text-align: center;
-  width: 100%;
-  padding: 20px;
+  padding: 2rem;
+  font-size: 1.2rem;
 }
 
-.home-content h1 {
-  font-size: 2.5rem;
-  color: #2c3e50;
-  margin-bottom: 20px;
-}
-
-/* Contenedores de imagen */
-.image-container {
-  width: 300px;
-  height: 200px;
-  background: #ecf0f1;
-  border-radius: 10px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+.error {
+  color: #f44336;
 }

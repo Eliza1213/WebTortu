@@ -36,12 +36,11 @@ const HeaderPublic = () => {
     <header className="header">
       <div className="logo-title">
         <img src="/logo.png" alt="Logo" className="logo" />
-        <h1 className="title">TORTU-TERRA</h1>
+        <Link to="/"><h1 className="title">TORTUTERRA</h1></Link>
       </div>
 
       {/* Menú principal en pantallas grandes */}
       <nav className="nav" ref={dropdownRef}>
-        <Link to="/" className="nav-link">Inicio</Link>
 
         <div className="dropdown">
           <button className="nav-link" onClick={() => toggleSubmenu("sesion")}>
@@ -54,16 +53,7 @@ const HeaderPublic = () => {
           </ul>
         </div>
 
-        <div className="dropdown">
-          <button className="nav-link" onClick={() => toggleSubmenu("info")}>
-            INFORMACIÓN DE TORTUGAS
-          </button>
-          <ul className={`dropdown-menu ${submenuOpen === "info" ? "open" : ""}`}>
-            <li><Link to="/tortugas-adecuadas" className="dropdown-item">Tortugas adecuadas</Link></li>
-            <li><Link to="/cuidados-basicos" className="dropdown-item">Cuidados básicos</Link></li>
-            <li><Link to="/consejos" className="dropdown-item">Consejos para el hábitat</Link></li>
-          </ul>
-        </div>
+        <Link to="/InformacionVisualizar" className="nav-link">Informacion de Tortugas</Link>
       </nav>
 
       {/* Menú Hamburguesa solo en móviles */}

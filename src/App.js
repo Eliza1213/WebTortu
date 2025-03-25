@@ -1,6 +1,6 @@
 // src/App.js
 import React from "react";
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, useLocation } from "react-router-dom";
 import FormLogin from "./components/FormLogin";
 import FormRegistro from "./components/FormRegistro";
 import FormRecuperacion from "./components/FormRecuperacion";
@@ -10,6 +10,7 @@ import AdminDashboard from "./page/AdminDashboard";
 import PrivateRoute from "./components/PrivateRoute";
 import AdminRoute from "./components/AdminRoute";
 import HeaderPublic from "./components/HeaderPublic";
+import HeaderAdmin from "./components/HeaderAdmin";
 import Perfil from "./components/Perfil";
 import TerrarioControl from "./components/TerrarioControl";
 import MisionesVisualizar from "./components/MisionesVisualizar";
@@ -22,9 +23,14 @@ import PreguntasVisualizar from "./components/PreguntasVisualizar";
 import TerminosVisualizar from "./components/TerminosVisualizar";
 
 function App() {
+  const location = useLocation();
+  const isAdminRoute = location.pathname.startsWith("/admin");
+
   return (
     <div>
-      <HeaderPublic />
+      {/* Mostrar HeaderAdmin solo en rutas de admin, HeaderPublic en otras */}
+      {isAdminRoute ? <HeaderAdmin /> : <HeaderPublic />}
+      
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<FormLogin />} />
@@ -39,19 +45,13 @@ function App() {
         <Route path="/preguntas" element={<PreguntasVisualizar/>}/>
         <Route path="/terminos" element={<TerminosVisualizar/>}/>
         
-        
-
         <Route element={<PrivateRoute />}>
           <Route path="/usuario" element={<UserDashboard />} />
           <Route path="configuraciones" element={<TerrarioControl />}/>
           <Route path="/perfil" element={<Perfil />} />
         </Route>
 
-        <Route element={<AdminRoute />}>
-          <Route path="/admin/*" element={<AdminDashboard />}>
-            {/* Añade otras rutas de administración aquí */}
-          </Route>
-        </Route>
+        <Route path="/admin/*" element={<AdminRoute><AdminDashboard /></AdminRoute>} />
       </Routes>
     </div>
   );

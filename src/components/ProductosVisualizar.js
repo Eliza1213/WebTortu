@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import '../style/productosPublica.css'; // Asegúrate de tener una hoja de estilos para productos
 
 const ProductosVisualizar = () => {
     const [productos, setProductos] = useState([]);
