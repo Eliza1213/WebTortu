@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import Swal from "sweetalert2";
 
 const FormRecuperacion = () => {
   const [step, setStep] = useState(0);
@@ -9,7 +10,6 @@ const FormRecuperacion = () => {
     nuevaPassword: "",
     confirmarPassword: "",
   });
-  const [mensaje, setMensaje] = useState("");
   const [preguntaSecreta, setPreguntaSecreta] = useState("");
 
   const handleChange = (e) => {
@@ -22,13 +22,41 @@ const FormRecuperacion = () => {
 
   const handleNextStep = async () => {
     if (step === 0) {
-      // Verificar correo
+      // Validar correo
+      const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
+
+      if (!formData.email) {
+        Swal.fire({
+          icon: "error",
+          title: "Error",
+          text: "Debes ingresar un correo electrónico.",
+        });
+        return;
+      }
+
+      if (!emailRegex.test(formData.email)) {
+        Swal.fire({
+          icon: "error",
+          title: "Error",
+          text: "El formato del correo electrónico no es válido.",
+        });
+        return;
+      }
+
       try {
         const response = await axios.post("http://localhost:4000/api/usuarios/verificar-correo", { email: formData.email });
-        setMensaje(response.data.mensaje);
+        Swal.fire({
+          icon: "success",
+          title: "Correo Verificado",
+          text: response.data.mensaje,
+        });
         setStep(1);
       } catch (error) {
-        setMensaje(error.response.data.error);
+        Swal.fire({
+          icon: "error",
+          title: "Error",
+          text: error.response.data.error,
+        });
       }
     } else if (step === 1) {
       // Verificar respuesta secreta
@@ -37,10 +65,18 @@ const FormRecuperacion = () => {
           email: formData.email,
           respuesta: formData.respuestaSecreta,
         });
-        setMensaje(response.data.mensaje);
+        Swal.fire({
+          icon: "success",
+          title: "Respuesta Correcta",
+          text: response.data.mensaje,
+        });
         setStep(2);
       } catch (error) {
-        setMensaje(error.response.data.error);
+        Swal.fire({
+          icon: "error",
+          title: "Error",
+          text: error.response.data.error,
+        });
       }
     } else if (step === 2) {
       // Cambiar contraseña
@@ -50,13 +86,25 @@ const FormRecuperacion = () => {
             email: formData.email,
             nuevaPassword: formData.nuevaPassword,
           });
-          setMensaje(response.data.mensaje);
+          Swal.fire({
+            icon: "success",
+            title: "Contraseña Cambiada",
+            text: response.data.mensaje,
+          });
           setStep(3); // Paso final
         } catch (error) {
-          setMensaje(error.response.data.error);
+          Swal.fire({
+            icon: "error",
+            title: "Error",
+            text: error.response.data.error,
+          });
         }
       } else {
-        setMensaje("Las contraseñas no coinciden.");
+        Swal.fire({
+          icon: "error",
+          title: "Error",
+          text: "Las contraseñas no coinciden.",
+        });
       }
     }
   };
@@ -66,7 +114,11 @@ const FormRecuperacion = () => {
       const response = await axios.post("http://localhost:4000/api/usuarios/obtener-pregunta", { email: formData.email });
       setPreguntaSecreta(response.data.preguntaSecreta);
     } catch (error) {
-      setMensaje(error.response.data.error);
+      Swal.fire({
+        icon: "error",
+        title: "Error",
+        text: error.response.data.error,
+      });
     }
   };
 
@@ -109,11 +161,9 @@ const FormRecuperacion = () => {
 
       {step === 3 && (
         <div>
-          <p>{mensaje}</p>
+          <p>Contraseña cambiada con éxito.</p>
         </div>
       )}
-
-      {mensaje && step !== 3 && <p>{mensaje}</p>}
     </form>
   );
 };
