@@ -2,7 +2,7 @@ import { Outlet } from "react-router-dom";
 import { useState, useEffect } from "react";
 import SidebarUser from "../components/SidebarUser";
 import FooterUser from "../components/FooterUser";
-import "../style/UserDashboard.css";
+import "../style/userDashboard.css";
 
 const UserDashboard = () => {
   const [sidebarVisible, setSidebarVisible] = useState(false);

@@ -31,7 +31,7 @@ import ActualizarUsuario from "../components/ActualizarUsuario";
 import Swal from "sweetalert2";
 
 const AdminDashboard = () => {
-  const nombreUsuario = localStorage.getItem("nombre") || "Administrador";
+
   const navigate = useNavigate();
 
   const handleLogout = () => {
