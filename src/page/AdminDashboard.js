@@ -25,9 +25,9 @@ import ActualizarProducto from "../components/ActualizarProducto";
 import CrearInformacion from "../components/CrearInformacion";
 import ListaInformacion from "../components/ListaInformacion";
 import ActualizarInformacion from "../components/ActualizarInformacion";
-
-import UsuariosAdmin from "../page/UsuariosAdmin";
-
+import UsuariosAdmin from "./UsuariosAdmin";
+import ListaUsuarios from "../components/ListaUsuarios";
+import ActualizarUsuario from "../components/ActualizarUsuario";
 import Swal from "sweetalert2";
 
 const AdminDashboard = () => {
@@ -157,7 +157,10 @@ const AdminDashboard = () => {
           <Route path="informaciones/actualizar/:id" element={<ActualizarInformacion />} />
 
           {/* 📌 NUEVA RUTA: Página de Usuarios/Roles */}
-          <Route path="usuarios/*" element={<UsuariosAdmin />} />
+          <Route path="usuarios" element={<UsuariosAdmin />} />
+          <Route path="usuarios/listar" element={<ListaUsuarios />} />
+          <Route path="usuarios/actualizar/:id" element={<ActualizarUsuario />} />
+          
       
         </Routes>
       </div>

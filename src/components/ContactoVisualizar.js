@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { FaFacebook, FaTwitter, FaInstagram, FaLinkedin, FaGlobe } from "react-icons/fa";
 import LeafletMap from "./LeafletMap";
 import "../style/Contacto.css";
-import Footer from "./Footer"; // Importa el Footer
+
 
 const ContactoVisualizar = () => {
   const [contactos, setContactos] = useState([]);
@@ -94,7 +94,6 @@ const ContactoVisualizar = () => {
           </div>
         )}
       </div>
-      <Footer />
     </>
   );
 };

@@ -1,106 +1,100 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
-import axios from "axios";
-import "../style/Actualizar.css";
 
 const ActualizarUsuario = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const [rol, setRol] = useState("");
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [usuario, setUsuario] = useState(null);
 
   useEffect(() => {
     const fetchUsuario = async () => {
       try {
-        const token = localStorage.getItem("token");
-        const response = await axios.get(`http://localhost:4000/api/usuarios/${id}`, {
-          headers: {
-            Authorization: `Bearer ${token}`
-          }
-        });
-
-        if (response.status !== 200 || !response.data) {
-          throw new Error("Datos de usuario no recibidos");
+        const response = await fetch(`http://localhost:4000/api/usuarios/${id}`);
+        
+        if (!response.ok) {
+          const errorText = await response.text();
+          throw new Error(`Error al obtener el usuario: ${errorText}`);
         }
-
-        setRol(response.data.rol);
-        setError(null);
+        
+        const data = await response.json();
+        setUsuario(data);
+        setRol(data.rol);
       } catch (error) {
-        console.error("Error fetching user:", error.response?.data || error.message);
-        setError(error.response?.data?.message || "Error al cargar usuario");
-        Swal.fire("Error", "No se pudo cargar la información del usuario", "error");
-      } finally {
-        setLoading(false);
+        console.error("Error detallado:", error);
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: error.message || 'No se pudo cargar la información del usuario'
+        });
       }
     };
-
+  
     fetchUsuario();
   }, [id]);
-
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     try {
       const token = localStorage.getItem("token");
-      const response = await axios.put(
-        `http://localhost:4000/api/usuarios/${id}/rol`,
-        { rol },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json"
-          }
-        }
-      );
+      const response = await fetch(`http://localhost:4000/api/usuarios/${id}`, {
+        method: "PUT",
+        headers: { 
+          "Content-Type": "application/json",
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({ rol }),
+      });
 
-      if (response.status === 200) {
-        await Swal.fire("Éxito", "Rol actualizado correctamente", "success");
-        navigate("/admin/usuarios");
+      if (response.ok) {
+        Swal.fire({
+          icon: 'success',
+          title: 'Éxito',
+          text: 'Rol de usuario actualizado correctamente'
+        }).then(() => {
+          navigate("/admin/usuarios/listar");
+        });
+      } else {
+        const errorData = await response.json();
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: errorData.message || 'Error al actualizar rol de usuario'
+        });
       }
     } catch (error) {
-      console.error("Update error:", error.response?.data || error.message);
-      Swal.fire(
-        "Error", 
-        error.response?.data?.message || "Error al actualizar el rol", 
-        "error"
-      );
+      console.error("Error en la actualización:", error);
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'Ocurrió un error al actualizar el rol'
+      });
     }
   };
 
-  if (loading) return <div className="loading">Cargando...</div>;
-  if (error) return <div className="error">{error}</div>;
+  if (!usuario) {
+    return <div>Cargando...</div>;
+  }
 
   return (
-    <div className="actualizar-container">
-      <h2>Actualizar Rol</h2>
+    <div className="usuarios-container">
+      <h2>Actualizar Rol de Usuario</h2>
       <form onSubmit={handleSubmit}>
-        <div className="form-group">
-          <label>Seleccione el nuevo rol:</label>
-          <select
-            value={rol}
-            onChange={(e) => setRol(e.target.value)}
-            required
-            className="form-control"
-          >
-            <option value="">-- Seleccione --</option>
+        <div>
+          <label>Nombre: {usuario.nombre}</label>
+        </div>
+        <div>
+          <label>Email: {usuario.email}</label>
+        </div>
+        <div>
+          <label>Rol Actual:</label>
+          <select value={rol} onChange={(e) => setRol(e.target.value)} required>
             <option value="usuario">Usuario</option>
-            <option value="admin">Administrador</option>
+            <option value="admin">Admin</option>
           </select>
         </div>
-        <div className="button-group">
-          <button type="submit" className="btn-primary">
-            Guardar Cambios
-          </button>
-          <button 
-            type="button" 
-            className="btn-secondary"
-            onClick={() => navigate(-1)}
-          >
-            Cancelar
-          </button>
-        </div>
+        <button type="submit">Actualizar Rol</button>
       </form>
     </div>
   );

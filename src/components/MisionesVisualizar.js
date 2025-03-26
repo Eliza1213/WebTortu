@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import '../style/visionesPublica.css';
-import Footer from "./Footer"; // Importa el Footer
+
 
 const MisionesVisualizar = () => {
   const [misiones, setMisiones] = useState([]);
@@ -29,7 +29,6 @@ const MisionesVisualizar = () => {
           </div>
         )}
       </div>
-      <Footer /> {/* Agrega el Footer aquí */}
     </>
   );
 };

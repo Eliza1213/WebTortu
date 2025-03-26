@@ -1,20 +1,45 @@
-// frontend/src/components/ListaUsuarios.js
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import "../style/ListaUsuarios.css";
+import Swal from "sweetalert2";
 
 const ListaUsuarios = () => {
   const [usuarios, setUsuarios] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchUsuarios = async () => {
-      const response = await fetch("http://localhost:4000/api/usuarios");
-      const data = await response.json();
-      setUsuarios(data);
+      try {
+        const token = localStorage.getItem("token");
+        const response = await fetch("http://localhost:4000/api/usuarios", {
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        });
+
+        if (!response.ok) {
+          throw new Error("Error al cargar usuarios");
+        }
+
+        const data = await response.json();
+        setUsuarios(data);
+        setLoading(false);
+      } catch (error) {
+        console.error("Error:", error);
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: 'No se pudieron cargar los usuarios'
+        });
+        setLoading(false);
+      }
     };
 
     fetchUsuarios();
   }, []);
+
+  if (loading) {
+    return <div>Cargando usuarios...</div>;
+  }
 
   return (
     <div className="usuarios-container">
@@ -37,7 +62,7 @@ const ListaUsuarios = () => {
               <td>{usuario.email}</td>
               <td>{usuario.rol}</td>
               <td>
-                <Link to={`/admin/usuarios/actualizar/${usuario._id}`}>
+                <Link to={`/admin/usuarios/actualizar/${usuario._id}`} className="btn">
                   Actualizar Rol
                 </Link>
               </td>

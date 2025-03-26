@@ -1,4 +1,3 @@
-// src/App.js
 import React from "react";
 import { Routes, Route, useLocation } from "react-router-dom";
 import FormLogin from "./components/FormLogin";
@@ -11,44 +10,66 @@ import PrivateRoute from "./components/PrivateRoute";
 import AdminRoute from "./components/AdminRoute";
 import HeaderPublic from "./components/HeaderPublic";
 import HeaderAdmin from "./components/HeaderAdmin";
+import HeaderUser from "./components/HeaderUser"; // Importamos el header del usuario
 import Perfil from "./components/Perfil";
 import TerrarioControl from "./components/TerrarioControl";
+
+
 import MisionesVisualizar from "./components/MisionesVisualizar";
+import MisionesPublicas from "./components/MisionesPublica";
+
 import InformacionVisualizar from "./components/InformacionVisualizar";
 import ProductosVisualizar from "./components/ProductosVisualizar";
 import VisionesVisualizar from "./components/VisionesVisualizar";
+import VisionesPublicas from "./components/VisionesPublica";
 import ContactoVisualizar from "./components/ContactoVisualizar";
+import ContactosPublicas from "./components/ContactoPublica";
 import PoliticasVisualizar from "./components/PoliticasVisualizar";
+import PoliticasPublicas from "./components/PoliticasPublica";
 import PreguntasVisualizar from "./components/PreguntasVisualizar";
 import TerminosVisualizar from "./components/TerminosVisualizar";
+import TerminosPublicas from "./components/TerminosPublica";
+import UsuarioInformacion from './page/UsuarioInformacion';
+
 
 function App() {
   const location = useLocation();
   const isAdminRoute = location.pathname.startsWith("/admin");
+  const isUserRoute = location.pathname.startsWith("/usuario");
 
   return (
     <div>
-      {/* Mostrar HeaderAdmin solo en rutas de admin, HeaderPublic en otras */}
-      {isAdminRoute ? <HeaderAdmin /> : <HeaderPublic />}
-      
+      {/* Mostrar header según la ruta */}
+      {isAdminRoute ? <HeaderAdmin /> : isUserRoute ? <HeaderUser /> : <HeaderPublic />}
+
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<FormLogin />} />
         <Route path="/registro" element={<FormRegistro />} />
         <Route path="/recuperacion" element={<FormRecuperacion />} />
-        <Route path="/mision" element={<MisionesVisualizar />} />
-        <Route path="/InformacionVisualizar" element={<InformacionVisualizar/>} />
-        <Route path="/productos" element={<ProductosVisualizar/>}/>
-        <Route path="/vision" element={<VisionesVisualizar/>}/>
-        <Route path="/contacto" element={<ContactoVisualizar/>}/>
-        <Route path="/politicas" element={<PoliticasVisualizar/>}/>
-        <Route path="/preguntas" element={<PreguntasVisualizar/>}/>
-        <Route path="/terminos" element={<TerminosVisualizar/>}/>
+        <Route path="/mision" element={<MisionesPublicas />} />
+        <Route path="/InformacionVisualizar" element={<InformacionVisualizar />} />
+        <Route path="/productos" element={<ProductosVisualizar />} />
+        <Route path="/vision" element={<VisionesPublicas />} />
+        <Route path="/contacto" element={<ContactosPublicas />} />
+        <Route path="/politicas" element={<PoliticasPublicas />} />
+        <Route path="/preguntas" element={<PreguntasVisualizar />} />
+        <Route path="/terminos" element={<TerminosPublicas />} />
         
+
         <Route element={<PrivateRoute />}>
-          <Route path="/usuario" element={<UserDashboard />} />
-          <Route path="configuraciones" element={<TerrarioControl />}/>
-          <Route path="/perfil" element={<Perfil />} />
+          <Route path="/usuario" element={<UserDashboard />}>
+            {/* Rutas anidadas - se concatenan al path padre /usuario */}
+            <Route path="configuraciones" element={<TerrarioControl />} />
+            <Route path="perfil" element={<Perfil />} />
+            <Route path="informacion-tortuga" element={<UsuarioInformacion />} />
+            <Route path="productos" element={<ProductosVisualizar />} /> {/* Nueva ruta */}
+            <Route path="contacto" element={<ContactoVisualizar />} />
+            <Route path="mision" element={<MisionesVisualizar />} />
+            <Route path="vision" element={<VisionesVisualizar />} />
+            <Route path="politicas" element={<PoliticasVisualizar />} />
+            <Route path="terminos" element={<TerminosVisualizar />} />
+          </Route>
         </Route>
 
         <Route path="/admin/*" element={<AdminRoute><AdminDashboard /></AdminRoute>} />

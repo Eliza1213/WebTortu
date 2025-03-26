@@ -1,141 +1,208 @@
-// src/components/Perfil.js
-import React, { useState, useEffect } from "react";
-import axios from "axios";
-import "../style/Perfil.css"; // Importa los estilos
+import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
+import '../style/Perfil.css';
 
 const Perfil = () => {
-  const [perfil, setPerfil] = useState({
-    nombre: "",
-    ap: "",
-    am: "",
-    username: "",
-    email: "",
-    telefono: "",
-    preguntaSecreta: "",
-    respuestaSecreta: "",
+  // Estado inicial vacío
+  const [usuario, setUsuario] = useState({
+    nombre: '',
+    email: '',
+    telefono: '',
+    avatar: 'https://i.pravatar.cc/150?img=5',
+    tortugas: [],
+    ultimoAcceso: new Date().toISOString().split('T')[0] // Fecha actual
   });
 
-  useEffect(() => {
-    // Obtener el token del localStorage
-    const token = localStorage.getItem("token");
+  const [editando, setEditando] = useState(false);
+  const [formData, setFormData] = useState({ ...usuario });
+  const [cargando, setCargando] = useState(true);
+  const [error, setError] = useState(null);
 
-    // Hacer la solicitud al backend para obtener los datos del perfil
-    axios
-      .get("http://localhost:4000/api/usuarios/perfil", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      })
-      .then((response) => {
-        setPerfil(response.data); // Guardar los datos en el estado
-      })
-      .catch((error) => {
-        console.error("Error al obtener el perfil:", error);
-      });
+  // Cargar datos del perfil al montar el componente
+  useEffect(() => {
+    const cargarPerfil = async () => {
+      try {
+        setCargando(true);
+        const token = localStorage.getItem('token'); // Asumiendo que usas JWT
+        
+        const response = await fetch('http://localhost:4000/api/usuarios/perfil', {
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        });
+
+        if (!response.ok) throw new Error('Error al cargar perfil');
+
+        const data = await response.json();
+        setUsuario(data);
+        setFormData(data);
+      } catch (err) {
+        console.error("Error:", err);
+        setError(err.message);
+      } finally {
+        setCargando(false);
+      }
+    };
+
+    cargarPerfil();
   }, []);
 
   const handleChange = (e) => {
-    const { name, value } = e.target;
-    setPerfil({
-      ...perfil,
-      [name]: value,
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-
-    // Obtener el token del localStorage
-    const token = localStorage.getItem("token");
-
-    // Enviar los datos actualizados al backend (excluyendo el rol)
-    const datosActualizados = { ...perfil };
-    delete datosActualizados.rol; // Excluir el campo "rol"
-
-    axios
-      .put("http://localhost:4000/api/usuarios/perfil", datosActualizados, {
+    try {
+      setCargando(true);
+      const token = localStorage.getItem('token');
+      
+      const response = await fetch('http://localhost:4000/api/usuarios/perfil', {
+        method: 'PUT',
         headers: {
-          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
         },
-      })
-      .then((response) => {
-        alert("Perfil actualizado correctamente");
-      })
-      .catch((error) => {
-        console.error("Error al actualizar el perfil:", error);
+        body: JSON.stringify(formData)
       });
+
+      if (!response.ok) throw new Error('Error al actualizar');
+
+      const data = await response.json();
+      setUsuario(data);
+      setEditando(false);
+    } catch (err) {
+      console.error("Error:", err);
+      setError(err.message);
+    } finally {
+      setCargando(false);
+    }
   };
+
+  if (cargando) return <div className="cargando">Cargando perfil...</div>;
+  if (error) return <div className="error">Error: {error}</div>;
 
   return (
     <div className="perfil-container">
-      <h1>Editar Perfil</h1>
-      <form onSubmit={handleSubmit}>
-        <label>Nombre:</label>
-        <input
-          type="text"
-          name="nombre"
-          value={perfil.nombre}
-          onChange={handleChange}
-        />
-        <br />
-        <label>Apellido Paterno:</label>
-        <input
-          type="text"
-          name="ap"
-          value={perfil.ap}
-          onChange={handleChange}
-        />
-        <br />
-        <label>Apellido Materno:</label>
-        <input
-          type="text"
-          name="am"
-          value={perfil.am}
-          onChange={handleChange}
-        />
-        <br />
-        <label>Nombre de usuario:</label>
-        <input
-          type="text"
-          name="username"
-          value={perfil.username}
-          onChange={handleChange}
-        />
-        <br />
-        <label>Email:</label>
-        <input
-          type="email"
-          name="email"
-          value={perfil.email}
-          onChange={handleChange}
-        />
-        <br />
-        <label>Teléfono:</label>
-        <input
-          type="tel"
-          name="telefono"
-          value={perfil.telefono}
-          onChange={handleChange}
-        />
-        <br />
-        <label>Pregunta Secreta:</label>
-        <input
-          type="text"
-          name="preguntaSecreta"
-          value={perfil.preguntaSecreta}
-          onChange={handleChange}
-        />
-        <br />
-        <label>Respuesta Secreta:</label>
-        <input
-          type="text"
-          name="respuestaSecreta"
-          value={perfil.respuestaSecreta}
-          onChange={handleChange}
-        />
-        <br />
-        <button type="submit">Guardar cambios</button>
-      </form>
+      <div className="perfil-header">
+        <h1>Mi Perfil</h1>
+        <button 
+          onClick={() => setEditando(!editando)}
+          className="editar-btn"
+          disabled={cargando}
+        >
+          {editando ? 'Cancelar' : 'Editar Perfil'}
+        </button>
+      </div>
+
+      <div className="perfil-content">
+        <div className="avatar-section">
+          <img 
+            src={usuario.avatar} 
+            alt="Avatar" 
+            className="avatar-img"
+          />
+          {editando && (
+            <button className="cambiar-avatar-btn">
+              Cambiar Foto
+            </button>
+          )}
+        </div>
+
+        {editando ? (
+          <form onSubmit={handleSubmit} className="perfil-form">
+            <div className="form-group">
+              <label>Nombre:</label>
+              <input
+                type="text"
+                name="nombre"
+                value={formData.nombre}
+                onChange={handleChange}
+                required
+              />
+            </div>
+
+            <div className="form-group">
+              <label>Email:</label>
+              <input
+                type="email"
+                name="email"
+                value={formData.email}
+                onChange={handleChange}
+                required
+              />
+            </div>
+
+            <div className="form-group">
+              <label>Teléfono:</label>
+              <input
+                type="tel"
+                name="telefono"
+                value={formData.telefono}
+                onChange={handleChange}
+              />
+            </div>
+
+            <button 
+              type="submit" 
+              className="guardar-btn"
+              disabled={cargando}
+            >
+              {cargando ? 'Guardando...' : 'Guardar Cambios'}
+            </button>
+          </form>
+        ) : (
+          <div className="info-perfil">
+            <div className="info-item">
+              <span className="info-label">Nombre:</span>
+              <span className="info-value">{usuario.nombre}</span>
+            </div>
+            <div className="info-item">
+              <span className="info-label">Email:</span>
+              <span className="info-value">{usuario.email}</span>
+            </div>
+            <div className="info-item">
+              <span className="info-label">Teléfono:</span>
+              <span className="info-value">{usuario.telefono || 'No especificado'}</span>
+            </div>
+            <div className="info-item">
+              <span className="info-label">Mis Tortugas:</span>
+              <div className="tortugas-list">
+                {usuario.tortugas.length > 0 ? (
+                  usuario.tortugas.map((tortuga, index) => (
+                    <span key={index} className="tortuga-tag">
+                      {tortuga.nombre || tortuga}
+                    </span>
+                  ))
+                ) : (
+                  <span className="sin-tortugas">No hay tortugas registradas</span>
+                )}
+                <Link to="/usuario/tortugas" className="agregar-tortuga">
+                  +
+                </Link>
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
+
+      <div className="stats-section">
+        <div className="stat-card">
+          <h3>Último Acceso</h3>
+          <p>{usuario.ultimoAcceso}</p>
+        </div>
+        <div className="stat-card">
+          <h3>Tortugas Registradas</h3>
+          <p>{usuario.tortugas.length}</p>
+        </div>
+        <div className="stat-card">
+          <h3>Dispositivos IoT</h3>
+          <p>{usuario.dispositivosIoT || 0}</p>
+        </div>
+      </div>
     </div>
   );
 };
