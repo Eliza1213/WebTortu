@@ -37,6 +37,7 @@ function App() {
   const isAdminRoute = location.pathname.startsWith("/admin");
   const isUserRoute = location.pathname.startsWith("/usuario");
 
+
   return (
     <div>
       {/* Mostrar header según la ruta */}
