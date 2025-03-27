@@ -13,6 +13,7 @@ import HeaderAdmin from "./components/HeaderAdmin";
 import HeaderUser from "./components/HeaderUser"; // Importamos el header del usuario
 import Perfil from "./components/Perfil";
 import TerrarioControl from "./components/TerrarioControl";
+import Perfil2 from "./components/userProfile";
 
 
 import MisionesVisualizar from "./components/MisionesVisualizar";
@@ -63,6 +64,7 @@ function App() {
             {/* Rutas anidadas - se concatenan al path padre /usuario */}
             <Route path="configuraciones" element={<TerrarioControl />} />
             <Route path="perfil" element={<Perfil />} />
+            <Route path="perfil2" element={<Perfil2 />} />
             <Route path="informacion-tortuga" element={<UsuarioInformacion />} />
             <Route path="productos" element={<ProductosVisualizar />} /> {/* Nueva ruta */}
             <Route path="contacto" element={<ContactoVisualizar />} />
