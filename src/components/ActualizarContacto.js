@@ -13,7 +13,7 @@ const ActualizarContacto = () => {
   useEffect(() => {
     const fetchContacto = async () => {
       try {
-        const response = await fetch(`http://localhost:4000/api/contactos/${id}`);
+        const response = await fetch(`https://webtortuterra.vercel.app/api/contactos/${id}`);
         if (!response.ok) throw new Error("Error al obtener el contacto");
         const data = await response.json();
         setEmail(data.email);
@@ -75,7 +75,7 @@ const ActualizarContacto = () => {
     };
 
     try {
-      const response = await fetch(`http://localhost:4000/api/contactos/${id}`, {
+      const response = await fetch(`https://webtortuterra.vercel.app/api/contactos/${id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(updatedContacto),

@@ -23,7 +23,7 @@ const CrearInformacion = () => {
     };
 
     try {
-      const response = await fetch("http://localhost:4000/api/informaciones", {
+      const response = await fetch("https://webtortuterra.vercel.app/api/informaciones", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

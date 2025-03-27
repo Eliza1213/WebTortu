@@ -9,7 +9,7 @@ const ListarTerminos = () => {
   useEffect(() => {
     const fetchTerminos = async () => {
       try {
-        const response = await fetch("http://localhost:4000/api/terminos");
+        const response = await fetch("https://webtortuterra.vercel.app/api/terminos");
         if (!response.ok) throw new Error("Error al obtener términos");
         const data = await response.json();
         console.log("Términos obtenidos:", data); // Depuración
@@ -37,7 +37,7 @@ const ListarTerminos = () => {
 
     if (confirmacion.isConfirmed) {
       try {
-        const response = await fetch(`http://localhost:4000/api/terminos/${id}`, {
+        const response = await fetch(`https://webtortuterra.vercel.app/api/terminos/${id}`, {
           method: "DELETE",
         });
 

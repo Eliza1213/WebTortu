@@ -5,7 +5,7 @@ const InformacionVisualizar = () => {
     const [informaciones, setInformaciones] = useState([]);
 
     useEffect(() => {
-      fetch("http://localhost:4000/api/informaciones")
+      fetch("https://webtortuterra.vercel.app/api/informaciones")
         .then((response) => response.json())
         .then((data) => setInformaciones(data))
         .catch((error) => console.error("Error al obtener la información:", error));

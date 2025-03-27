@@ -13,7 +13,7 @@ const CrearMision = () => {
 
     try {
       console.log("Enviando solicitud POST:", newMision); // Depuración
-      const response = await fetch("http://localhost:4000/api/misiones", {
+      const response = await fetch("https://webtortuterra.vercel.app/api/misiones", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

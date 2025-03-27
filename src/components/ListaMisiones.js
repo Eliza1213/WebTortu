@@ -9,7 +9,7 @@ const ListarMisiones = () => {
   useEffect(() => {
     const fetchMisiones = async () => {
       try {
-        const response = await fetch("http://localhost:4000/api/misiones");
+        const response = await fetch("https://webtortuterra.vercel.app/api/misiones");
         if (!response.ok) throw new Error("Error al obtener misiones");
         const data = await response.json();
         console.log("Misiones obtenidas:", data); // Depuración
@@ -37,7 +37,7 @@ const ListarMisiones = () => {
 
     if (confirmacion.isConfirmed) {
       try {
-        const response = await fetch(`http://localhost:4000/api/misiones/${id}`, {
+        const response = await fetch(`https://webtortuterra.vercel.app/api/misiones/${id}`, {
           method: "DELETE",
         });
 

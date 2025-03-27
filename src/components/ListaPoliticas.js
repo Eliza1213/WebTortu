@@ -9,7 +9,7 @@ const ListarPoliticas = () => {
   useEffect(() => {
     const fetchPoliticas = async () => {
       try {
-        const response = await fetch("http://localhost:4000/api/politicas");
+        const response = await fetch("https://webtortuterra.vercel.app/api/politicas");
         if (!response.ok) throw new Error("Error al obtener políticas");
         const data = await response.json();
         console.log("Políticas obtenidas:", data); // Depuración
@@ -37,7 +37,7 @@ const ListarPoliticas = () => {
 
     if (confirmacion.isConfirmed) {
       try {
-        const response = await fetch(`http://localhost:4000/api/politicas/${id}`, {
+        const response = await fetch(`https://webtortuterra.vercel.app/api/politicas/${id}`, {
           method: "DELETE",
         });
 

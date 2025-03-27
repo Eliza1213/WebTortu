@@ -14,7 +14,7 @@ const ActualizarMision = () => {
     const fetchMision = async () => {
       try {
         console.log("Obteniendo misión con ID:", id); // Depuración
-        const response = await fetch(`http://localhost:4000/api/misiones/${id}`);
+        const response = await fetch(`https://webtortuterra.vercel.app/api/misiones/${id}`);
         if (!response.ok) throw new Error("Error al obtener la misión");
         const data = await response.json();
         console.log("Misión obtenida:", data); // Depuración
@@ -36,7 +36,7 @@ const ActualizarMision = () => {
 
     try {
       console.log("Enviando solicitud PUT:", updatedMision); // Depuración
-      const response = await fetch(`http://localhost:4000/api/misiones/${id}`, {
+      const response = await fetch(`https://webtortuterra.vercel.app/api/misiones/${id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(updatedMision),

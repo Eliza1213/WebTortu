@@ -13,7 +13,7 @@ const CrearPolitica = () => {
 
     try {
       console.log("Enviando solicitud POST:", newPolitica); // Depuración
-      const response = await fetch("http://localhost:4000/api/politicas", {
+      const response = await fetch("https://webtortuterra.vercel.app/api/politicas", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

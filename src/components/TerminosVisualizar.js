@@ -6,7 +6,7 @@ const TerminosVisualizar = () => {
   const [terminos, setTerminos] = useState([]);
 
   useEffect(() => {
-    fetch("http://localhost:4000/api/terminos") // Llamada al backend
+    fetch("https://webtortuterra.vercel.app/api/terminos") // Llamada al backend
       .then((response) => response.json())
       .then((data) => setTerminos(data))
       .catch((error) => console.error("Error al obtener Términos:", error));

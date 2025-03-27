@@ -9,7 +9,7 @@ const ListarPreguntas = () => {
   useEffect(() => {
     const fetchPreguntas = async () => {
       try {
-        const response = await fetch("http://localhost:4000/api/preguntas");
+        const response = await fetch("https://webtortuterra.vercel.app/api/preguntas");
         if (!response.ok) throw new Error("Error al obtener preguntas");
         const data = await response.json();
         console.log("Preguntas obtenidas:", data); // Depuración
@@ -38,7 +38,7 @@ const ListarPreguntas = () => {
 
     if (confirmacion.isConfirmed) {
       try {
-        const response = await fetch(`http://localhost:4000/api/preguntas/${id}`, {
+        const response = await fetch(`https://webtortuterra.vercel.app/api/preguntas/${id}`, {
           method: "DELETE",
         });
 

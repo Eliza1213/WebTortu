@@ -9,7 +9,7 @@ const ListarVisiones = () => {
   useEffect(() => {
     const fetchVisiones = async () => {
       try {
-        const response = await fetch("http://localhost:4000/api/visiones");
+        const response = await fetch("https://webtortuterra.vercel.app/api/visiones");
         if (!response.ok) throw new Error("Error al obtener visiones");
         const data = await response.json();
         console.log("Visiones obtenidas:", data); // Depuración
@@ -37,7 +37,7 @@ const ListarVisiones = () => {
 
     if (confirmacion.isConfirmed) {
       try {
-        const response = await fetch(`http://localhost:4000/api/visiones/${id}`, {
+        const response = await fetch(`https://webtortuterra.vercel.app/api/visiones/${id}`, {
           method: "DELETE",
         });
 

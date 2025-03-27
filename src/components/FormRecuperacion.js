@@ -44,7 +44,7 @@ const FormRecuperacion = () => {
       }
 
       try {
-        const response = await axios.post("http://localhost:4000/api/usuarios/verificar-correo", { email: formData.email });
+        const response = await axios.post("https://webtortuterra.vercel.app/api/usuarios/verificar-correo", { email: formData.email });
         Swal.fire({
           icon: "success",
           title: "Correo Verificado",
@@ -61,7 +61,7 @@ const FormRecuperacion = () => {
     } else if (step === 1) {
       // Verificar respuesta secreta
       try {
-        const response = await axios.post("http://localhost:4000/api/usuarios/verificar-respuesta", {
+        const response = await axios.post("https://webtortuterra.vercel.app/api/usuarios/verificar-respuesta", {
           email: formData.email,
           respuesta: formData.respuestaSecreta,
         });
@@ -82,7 +82,7 @@ const FormRecuperacion = () => {
       // Cambiar contraseña
       if (formData.nuevaPassword === formData.confirmarPassword) {
         try {
-          const response = await axios.post("http://localhost:4000/api/usuarios/cambiar-contrasena", {
+          const response = await axios.post("https://webtortuterra.vercel.app/api/usuarios/cambiar-contrasena", {
             email: formData.email,
             nuevaPassword: formData.nuevaPassword,
           });
@@ -111,7 +111,7 @@ const FormRecuperacion = () => {
 
   const fetchPreguntaSecreta = async () => {
     try {
-      const response = await axios.post("http://localhost:4000/api/usuarios/obtener-pregunta", { email: formData.email });
+      const response = await axios.post("https://webtortuterra.vercel.app/api/usuarios/obtener-pregunta", { email: formData.email });
       setPreguntaSecreta(response.data.preguntaSecreta);
     } catch (error) {
       Swal.fire({

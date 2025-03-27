@@ -6,7 +6,7 @@ const VisionesVisualizar = () => {
   const [visiones, setVisiones] = useState([]);
 
   useEffect(() => {
-    fetch("http://localhost:4000/api/visiones") // Llamada al backend
+    fetch("https://webtortuterra.vercel.app/api/visiones") // Llamada al backend
       .then((response) => response.json())
       .then((data) => setVisiones(data))
       .catch((error) => console.error("Error al obtener visiones:", error));

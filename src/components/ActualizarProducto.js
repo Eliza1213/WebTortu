@@ -15,7 +15,7 @@ const ActualizarProducto = () => {
   useEffect(() => {
     const fetchProducto = async () => {
       try {
-        const response = await fetch(`http://localhost:4000/api/productos/${id}`);
+        const response = await fetch(`https://webtortuterra.vercel.app/api/productos/${id}`);
         if (!response.ok) throw new Error("Error al obtener el producto");
         const data = await response.json();
         setNombre(data.nombre);
@@ -43,7 +43,7 @@ const ActualizarProducto = () => {
     };
 
     try {
-      const response = await fetch(`http://localhost:4000/api/productos/${id}`, {
+      const response = await fetch(`https://webtortuterra.vercel.app/api/productos/${id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(updatedProducto),

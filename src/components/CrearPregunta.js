@@ -12,7 +12,7 @@ const CrearPregunta = () => {
     const newPregunta = { pregunta, respuesta };
 
     try {
-      const response = await fetch("http://localhost:4000/api/preguntas", {
+      const response = await fetch("https://webtortuterra.vercel.app/api/preguntas", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

@@ -12,7 +12,7 @@ const ActualizarPolitica = () => {
   useEffect(() => {
     const fetchPolitica = async () => {
       try {
-        const response = await fetch(`http://localhost:4000/api/politicas/${id}`);
+        const response = await fetch(`https://webtortuterra.vercel.app/api/politicas/${id}`);
         if (!response.ok) throw new Error("Error al obtener la política");
         const data = await response.json();
         setTitulo(data.titulo);
@@ -31,7 +31,7 @@ const ActualizarPolitica = () => {
     const updatedPolitica = { titulo, contenido };
 
     try {
-      const response = await fetch(`http://localhost:4000/api/politicas/${id}`, {
+      const response = await fetch(`https://webtortuterra.vercel.app/api/politicas/${id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(updatedPolitica),

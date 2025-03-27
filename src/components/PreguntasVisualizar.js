@@ -5,7 +5,7 @@ const PreguntasVisualizar = () => {
     const [preguntas, setPreguntas] = useState([]);
   
     useEffect(() => {
-      fetch("http://localhost:4000/api/preguntas") // Llamada al backend
+      fetch("https://webtortuterra.vercel.app/api/preguntas") // Llamada al backend
         .then((response) => response.json())
         .then((data) => setPreguntas(data))
         .catch((error) => console.error("Error al obtener preguntas:", error));

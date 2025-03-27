@@ -12,7 +12,7 @@ const ActualizarTermino = () => {
   useEffect(() => {
     const fetchTermino = async () => {
       try {
-        const response = await fetch(`http://localhost:4000/api/terminos/${id}`);
+        const response = await fetch(`https://webtortuterra.vercel.app/api/terminos/${id}`);
         if (!response.ok) throw new Error("Error al obtener el término");
         const data = await response.json();
         setTitulo(data.titulo);
@@ -31,7 +31,7 @@ const ActualizarTermino = () => {
     const updatedTermino = { titulo, descripcion };
 
     try {
-      const response = await fetch(`http://localhost:4000/api/terminos/${id}`, {
+      const response = await fetch(`https://webtortuterra.vercel.app/api/terminos/${id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(updatedTermino),

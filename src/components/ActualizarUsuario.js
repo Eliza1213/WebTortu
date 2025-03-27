@@ -11,7 +11,7 @@ const ActualizarUsuario = () => {
   useEffect(() => {
     const fetchUsuario = async () => {
       try {
-        const response = await fetch(`http://localhost:4000/api/usuarios/${id}`);
+        const response = await fetch(`https://webtortuterra.vercel.app/api/usuarios/${id}`);
         
         if (!response.ok) {
           const errorText = await response.text();
@@ -38,7 +38,7 @@ const ActualizarUsuario = () => {
 
     try {
       const token = localStorage.getItem("token");
-      const response = await fetch(`http://localhost:4000/api/usuarios/${id}`, {
+      const response = await fetch(`https://webtortuterra.vercel.app/api/usuarios/${id}`, {
         method: "PUT",
         headers: { 
           "Content-Type": "application/json",

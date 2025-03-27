@@ -12,7 +12,7 @@ const ActualizarVision = () => {
   useEffect(() => {
     const fetchVision = async () => {
       try {
-        const response = await fetch(`http://localhost:4000/api/visiones/${id}`);
+        const response = await fetch(`https://webtortuterra.vercel.app/api/visiones/${id}`);
         if (!response.ok) throw new Error("Error al obtener la visión");
         const data = await response.json();
         setTitulo(data.titulo);
@@ -31,7 +31,7 @@ const ActualizarVision = () => {
     const updatedVision = { titulo, descripcion };
 
     try {
-      const response = await fetch(`http://localhost:4000/api/visiones/${id}`, {
+      const response = await fetch(`https://webtortuterra.vercel.app/api/visiones/${id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(updatedVision),

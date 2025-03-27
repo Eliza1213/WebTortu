@@ -11,7 +11,7 @@ const UserDashboard = () => {
 
   useEffect(() => {
     if (window.location.pathname === "/usuario") {
-      fetch("http://localhost:4000/api/productos")
+      fetch("https://webtortuterra.vercel.app/api/productos")
         .then(res => res.json())
         .then(data => setProductos(data.slice(0, 4))) // Solo 4 productos
         .catch(err => console.error("Error:", err));

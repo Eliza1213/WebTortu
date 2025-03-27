@@ -6,7 +6,7 @@ const PoliticasVisualizar = () => {
   const [politicas, setPoliticas] = useState([]);
 
   useEffect(() => {
-    fetch("http://localhost:4000/api/politicas") // Llamada al backend
+    fetch("https://webtortuterra.vercel.app/api/politicas") // Llamada al backend
       .then((response) => response.json())
       .then((data) => setPoliticas(data))
       .catch((error) => console.error("Error al obtener politicas:", error));

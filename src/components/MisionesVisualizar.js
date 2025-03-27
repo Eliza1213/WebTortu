@@ -6,7 +6,7 @@ const MisionesVisualizar = () => {
   const [misiones, setMisiones] = useState([]);
 
   useEffect(() => {
-    fetch("http://localhost:4000/api/misiones") // Llamada al backend
+    fetch("https://webtortuterra.vercel.app/api/misiones") // Llamada al backend
       .then((response) => response.json())
       .then((data) => setMisiones(data))
       .catch((error) => console.error("Error al obtener misiones:", error));

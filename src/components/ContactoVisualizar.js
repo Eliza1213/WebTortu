@@ -8,7 +8,7 @@ const ContactoVisualizar = () => {
   const [contactos, setContactos] = useState([]);
 
   useEffect(() => {
-    fetch("http://localhost:4000/api/contactos") // Llamada al backend
+    fetch("https://webtortuterra.vercel.app/api/contactos") // Llamada al backend
       .then((response) => response.json())
       .then((data) => {
         console.log("Datos recibidos:", data); // Verificar datos en consola

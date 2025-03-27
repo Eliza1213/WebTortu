@@ -11,7 +11,7 @@ const Home = () => {
   useEffect(() => {
     const fetchProductos = async () => {
       try {
-        const response = await fetch("http://localhost:4000/api/productos");
+        const response = await fetch("https://webtortuterra.vercel.app/api/productos");
         if (!response.ok) {
           throw new Error("Error al obtener productos");
         }

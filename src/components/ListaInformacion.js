@@ -9,7 +9,7 @@ const ListarInformacion = () => {
   useEffect(() => {
     const fetchInformaciones = async () => {
       try {
-        const response = await fetch("http://localhost:4000/api/informaciones");
+        const response = await fetch("https://webtortuterra.vercel.app/api/informaciones");
         if (!response.ok) throw new Error("Error al obtener información");
         const data = await response.json();
         console.log("Información obtenida:", data); // Depuración
@@ -38,7 +38,7 @@ const ListarInformacion = () => {
 
     if (confirmacion.isConfirmed) {
       try {
-        const response = await fetch(`http://localhost:4000/api/informaciones/${id}`, {
+        const response = await fetch(`https://webtortuterra.vercel.app/api/informaciones/${id}`, {
           method: "DELETE",
         });
 

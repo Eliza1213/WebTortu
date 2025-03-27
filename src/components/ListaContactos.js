@@ -8,7 +8,7 @@ const ListaContactos = () => {
   useEffect(() => {
     const fetchContactos = async () => {
       try {
-        const response = await fetch("http://localhost:4000/api/contactos");
+        const response = await fetch("https://webtortuterra.vercel.app/api/contactos");
         if (!response.ok) throw new Error("Error al obtener contactos");
         const data = await response.json();
         console.log("Contactos obtenidos:", data); // Depuración
@@ -24,7 +24,7 @@ const ListaContactos = () => {
   const handleEliminar = async (id) => {
     if (window.confirm("¿Estás seguro de que deseas eliminar este contacto?")) {
       try {
-        const response = await fetch(`http://localhost:4000/api/contactos/${id}`, {
+        const response = await fetch(`https://webtortuterra.vercel.app/api/contactos/${id}`, {
           method: "DELETE",
         });
 

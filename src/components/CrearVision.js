@@ -15,7 +15,7 @@ const CrearVision = () => {
 
     try {
       console.log("Enviando solicitud POST:", newVision); // Depuración
-      const response = await fetch("http://localhost:4000/api/visiones", {
+      const response = await fetch("https://webtortuterra.vercel.app/api/visiones", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
