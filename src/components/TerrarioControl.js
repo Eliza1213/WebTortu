@@ -1,224 +1,308 @@
-import React, { useState, useEffect } from "react";
-import mqtt from "mqtt";
-import { motion } from "framer-motion";
-import axios from "axios"; // Importar axios para realizar peticiones HTTP
+// src/components/TerrarioControlScreen.js
+import React, { useState, useCallback, useEffect } from "react";
+import { useTerrarioApi } from "../utils/api";
 import "../style/terrarioControl.css";
 
-const TerrarioControl = () => {
-  const [temperatura, setTemperatura] = useState(null);
-  const [humedad, setHumedad] = useState(null);
-  const [nivelComida, setNivelComida] = useState("Desconocido");
-  const [movimiento, setMovimiento] = useState(false);
-  const [estadoVentilador, setEstadoVentilador] = useState(false);
-  const [estadoLampara, setEstadoLampara] = useState(false);
-  const [cargandoActuador, setCargandoActuador] = useState(false);
-  const [clienteMQTT, setClienteMQTT] = useState(null);
-  const [dispositivoId, setDispositivoId] = useState("terrario-01"); // ID del dispositivo
+// Íconos
+import { 
+  FaThermometerHalf, 
+  //FaTint, 
+  FaPaw, 
+  FaCog, 
+  FaBolt, 
+  FaLightbulb, 
+  FaUtensils,
+  FaWifi,
+  FaSyncAlt
+} from 'react-icons/fa';
 
-  // URL de tu API
-  const API_URL = "http://localhost:4000/api";
+const TerrarioControlScreen = () => {
+  // Estado del terrario
+  const [status, setStatus] = useState({
+    temperature: 28.7,
+    fanState: false,
+    foodLevel: "empty",
+    turtleActivity: false,
+    stableTemp: 24.0,
+    maxTemp: 30.0,
+    lampState: false
+  });
+  
+  // Estados de interfaz
+  const [loading, setLoading] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
+  const [error, setError] = useState(null);
+  const [reconnectAttempts, setReconnectAttempts] = useState(0);
+  
+  // Hook API
+  const { 
+    status: apiStatus, 
+    connectionStatus, 
+    errorMessage, 
+    connect, 
+    controlFan, 
+    controlLamp, 
+    dispenseFood 
+  } = useTerrarioApi();
+  
+  const connected = connectionStatus === 'connected';
 
-  // Función para guardar datos en MongoDB
-  const guardarDatosEnMongoDB = async () => {
-    try {
-      const datosTerrario = {
-        dispositivo_id: dispositivoId,
-        temperatura: temperatura || 0,
-        humedad: humedad || 0,
-        luz: estadoLampara ? 1 : 0,
-        ventilador: estadoVentilador ? 1 : 0,
-        pir: movimiento ? 1 : 0
-      };
-
-      const respuesta = await axios.post(`${API_URL}/terrario/terrario-data`, datosTerrario);
-      console.log("Datos guardados en MongoDB:", respuesta.data);
-    } catch (error) {
-      console.error("Error al guardar datos en MongoDB:", error);
-    }
-  };
-
+  // Actualizar estado
   useEffect(() => {
-    // Conectar al broker MQTT
-    const client = mqtt.connect("ws://192.168.81.2:9001");
-
-    client.on("connect", () => {
-      console.log("Conectado al broker MQTT");
-      client.subscribe("tortuTerra/temperature");
-      client.subscribe("tortuTerra/humidity");
-      client.subscribe("tortuTerra/foodLevel");
-      client.subscribe("tortuTerra/turtleMoving");
-      client.subscribe("tortuTerra/fanState");
-      client.subscribe("tortuTerra/lampState");
-    });
-
-    client.on("message", (topico, mensaje) => {
-      const datos = mensaje.toString();
-      console.log(`Mensaje recibido en ${topico}:`, datos);
-
-      switch (topico) {
-        case "tortuTerra/temperature":
-          setTemperatura(parseFloat(datos));
-          break;
-        case "tortuTerra/humidity":
-          setHumedad(parseFloat(datos));
-          break;
-        case "tortuTerra/foodLevel":
-          setNivelComida(datos);
-          break;
-        case "tortuTerra/turtleMoving":
-          setMovimiento(datos === "true");
-          break;
-        case "tortuTerra/fanState":
-          setEstadoVentilador(datos === "on");
-          break;
-        case "tortuTerra/lampState":
-          setEstadoLampara(datos === "on");
-          break;
-        default:
-          console.warn("Tema no reconocido:", topico);
+    if (apiStatus) {
+      setStatus(prev => ({
+        ...prev,
+        temperature: apiStatus.temperature,
+        fanState: apiStatus.fanState,
+        foodLevel: apiStatus.foodLevel,
+        turtleActivity: apiStatus.turtleActivity,
+        lampState: apiStatus.lampState
+      }));
+      
+      if (connectionStatus === 'connected') {
+        setLoading(false);
+        setError(null);
       }
-    });
-
-    client.on("error", (error) => {
-      console.error("Error en la conexión MQTT:", error);
-    });
-
-    setClienteMQTT(client);
-
-    return () => {
-      client.end();
-    };
-  }, []);
-
-  // Efecto para guardar datos cuando cambian los valores de los sensores
-  useEffect(() => {
-    // Solo guardamos datos cuando tengamos al menos temperatura y humedad
-    if (temperatura !== null && humedad !== null) {
-      guardarDatosEnMongoDB();
     }
-  }, [temperatura, humedad, estadoLampara, estadoVentilador, movimiento]);
+  }, [apiStatus, connectionStatus]);
 
-  const controlarActuador = (actuador, accion) => {
-    setCargandoActuador(true);
-    const topico = `tortuTerra/${actuador}`;
-    clienteMQTT.publish(topico, accion, (error) => {
-      if (error) {
-        console.error("Error al publicar:", error);
-      } else {
-        console.log(`Mensaje enviado: ${topico} -> ${accion}`);
-        
-        // También enviar el comando al servidor para control de actuadores
-        axios.post(`${API_URL}/control`, { actuador, accion })
-          .then(response => {
-            console.log("Comando enviado al servidor:", response.data);
-          })
-          .catch(error => {
-            console.error("Error al enviar comando al servidor:", error);
-          });
+  // Manejar errores
+  useEffect(() => {
+    if (connectionStatus === 'error' && errorMessage) {
+      setError(`Error de conexión: ${errorMessage}`);
+      setLoading(false);
+      setReconnectAttempts(prev => prev + 1);
+      
+      if (reconnectAttempts >= 3) {
+        setError('No se puede conectar al servidor. Verifica tu conexión a Internet.');
       }
-      setCargandoActuador(false);
-    });
-  };
+    }
+  }, [connectionStatus, errorMessage, reconnectAttempts]);
 
-  const dispensarComida = () => {
-    setCargandoActuador(true);
-    clienteMQTT.publish("tortuTerra/dispense", "activate", (error) => {
-      if (error) {
-        console.error("Error al publicar:", error);
-      } else {
-        console.log("Comida dispensada");
-      }
-      setCargandoActuador(false);
+  // Funciones de control
+  const onRefresh = useCallback(() => {
+    setRefreshing(true);
+    setError(null);
+    connect().finally(() => {
+      setTimeout(() => {
+        setRefreshing(false);
+      }, 1000);
     });
-  };
+  }, [connect]);
+
+  const handleFanToggle = useCallback((event) => {
+    if (connected) {
+      const value = event.target.checked;
+      controlFan(value);
+    }
+  }, [connected, controlFan]);
+
+  const handleLampToggle = useCallback((event) => {
+    if (connected) {
+      const value = event.target.checked;
+      controlLamp(value);
+    }
+  }, [connected, controlLamp]);
+
+  const handleDispenseFood = useCallback(() => {
+    if (connected) {
+      dispenseFood();
+      alert('Dispensando comida. Se ha enviado la orden al dispensador.');
+    }
+  }, [connected, dispenseFood]);
+
+  const handleForceReconnect = useCallback(() => {
+    setLoading(true);
+    setError(null);
+    connect();
+  }, [connect]);
+
+  // Pantalla de carga
+  if (loading && !refreshing) {
+    return (
+      <div className="loading-page">
+        <div className="loading-content">
+          <div className="spinner"></div>
+          <h2>Conectando con el terrario...</h2>
+          <p>Por favor espera mientras establecemos conexión</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
-    <div className="terrario-control">
-      <h1>Control del Terrario</h1>
-      <div className="widgets">
-        <motion.div
-          className="widget"
-          data-type="temperatura"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-        >
-          <h2>Temperatura</h2>
-          <p>{temperatura !== null ? `${temperatura} °C` : "Cargando..."}</p>
-        </motion.div>
+    <div className="page-container">
+      {/* Header */}
+      <header className="page-header">
+        <div className="header-content">
+          <h1 className="logo">TORTUTERRA</h1>
+          <div className="connection-status">
+            <FaWifi className={`connection-icon ${connected ? 'connected' : 'disconnected'}`} />
+            <span>{connected ? 'Conectado' : 'Desconectado'}</span>
+            <button className="refresh-btn" onClick={onRefresh} disabled={refreshing}>
+              <FaSyncAlt className={refreshing ? 'spinning' : ''} />
+            </button>
+          </div>
+        </div>
+      </header>
 
-        <motion.div
-          className="widget"
-          data-type="humedad"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.2 }}
-        >
-          <h2>Humedad</h2>
-          <p>{humedad !== null ? `${humedad} %` : "Cargando..."}</p>
-        </motion.div>
+      {/* Main Content */}
+      <main className="main-content">
+        <section className="hero-section">
+          <div className="hero-content">
+            <h2>Control del Terrario</h2>
+            <p>Monitorea y controla el hábitat de tu tortuga desde cualquier lugar</p>
+          </div>
+        </section>
 
-        <motion.div
-          className="widget"
-          data-type="comida"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.4 }}
-        >
-          <h2>Nivel de Comida</h2>
-          <p>{nivelComida}</p>
-          <button onClick={dispensarComida} disabled={cargandoActuador}>
-            Dispensar Comida
-          </button>
-        </motion.div>
+        {/* Error Message */}
+        {error && (
+          <div className="error-alert">
+            <p>{error}</p>
+            <button className="reconnect-btn" onClick={handleForceReconnect}>
+              Intentar reconectar
+            </button>
+          </div>
+        )}
 
-        <motion.div
-          className="widget"
-          data-type="movimiento"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.6 }}
-        >
-          <h2>Movimiento</h2>
-          <p>{movimiento ? "Detectado" : "No detectado"}</p>
-        </motion.div>
+        <div className="dashboard-grid">
+          {/* Status Panel */}
+          <section className="status-panel card">
+            <h3 className="panel-title">
+              <FaThermometerHalf className="title-icon" />
+              Estado Actual
+            </h3>
+            
+            <div className="status-grid">
+              <div className="status-item">
+                <div className="status-icon temp">
+                  <FaThermometerHalf />
+                </div>
+                <div className="status-info">
+                  <p className="status-label">Temperatura</p>
+                  <p className="status-value">{status.temperature.toFixed(1)}°C</p>
+                </div>
+              </div>
 
-        <motion.div
-          className="widget"
-          data-type="ventilador"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.8 }}
-        >
-          <h2>Ventilador</h2>
-          <p>{estadoVentilador ? "Encendido" : "Apagado"}</p>
-          <button
-            onClick={() => controlarActuador("fan", estadoVentilador ? "off" : "on")}
-            disabled={cargandoActuador}
-          >
-            {estadoVentilador ? "Apagar Ventilador" : "Encender Ventilador"}
-          </button>
-        </motion.div>
+              <div className="status-item">
+                <div className="status-icon food">
+                  <FaUtensils />
+                </div>
+                <div className="status-info">
+                  <p className="status-label">Nivel de Comida</p>
+                  <p className="status-value">
+                    {status.foodLevel === "empty" ? "Vacío" :
+                    status.foodLevel === "medium" ? "Medio" : "Lleno"}
+                  </p>
+                </div>
+              </div>
 
-        <motion.div
-          className="widget"
-          data-type="lampara"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 1 }}
-        >
-          <h2>Lámpara</h2>
-          <p>{estadoLampara ? "Encendida" : "Apagada"}</p>
-          <button
-            onClick={() => controlarActuador("lamp", estadoLampara ? "off" : "on")}
-            disabled={cargandoActuador}
-          >
-            {estadoLampara ? "Apagar Lámpara" : "Encender Lámpara"}
-          </button>
-        </motion.div>
-      </div>
+              <div className="status-item">
+                <div className="status-icon activity">
+                  <FaPaw />
+                </div>
+                <div className="status-info">
+                  <p className="status-label">Actividad</p>
+                  <p className="status-value">{status.turtleActivity ? "Activa" : "Inactiva"}</p>
+                </div>
+              </div>
+
+              <div className="status-item">
+                <div className="status-icon ideal">
+                  <FaCog />
+                </div>
+                <div className="status-info">
+                  <p className="status-label">Temp. Ideal</p>
+                  <p className="status-value">
+                    {status.stableTemp}°C - {status.maxTemp}°C
+                  </p>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          {/* Controls Panel */}
+          <section className="controls-panel card">
+            <h3 className="panel-title">
+              <FaBolt className="title-icon" />
+              Controles
+            </h3>
+
+            <div className="control-list">
+              <div className="control-item">
+                <div className="control-info">
+                  <div className="control-icon">
+                    <FaBolt />
+                  </div>
+                  <div>
+                    <p className="control-label">Ventilador</p>
+                    <p className="control-status">{status.fanState ? "Encendido" : "Apagado"}</p>
+                  </div>
+                </div>
+                <label className="switch">
+                  <input 
+                    type="checkbox" 
+                    checked={status.fanState}
+                    onChange={handleFanToggle}
+                    disabled={!connected}
+                  />
+                  <span className="slider round"></span>
+                </label>
+              </div>
+
+              <div className="control-item">
+                <div className="control-info">
+                  <div className="control-icon">
+                    <FaLightbulb />
+                  </div>
+                  <div>
+                    <p className="control-label">Lámpara</p>
+                    <p className="control-status">{status.lampState ? "Encendida" : "Apagada"}</p>
+                  </div>
+                </div>
+                <label className="switch">
+                  <input 
+                    type="checkbox" 
+                    checked={status.lampState}
+                    onChange={handleLampToggle}
+                    disabled={!connected}
+                  />
+                  <span className="slider round"></span>
+                </label>
+              </div>
+
+              <button 
+                className={`food-button ${!connected ? 'disabled' : ''}`}
+                onClick={handleDispenseFood}
+                disabled={!connected}
+              >
+                <FaUtensils className="button-icon" />
+                <span>Dispensar Comida</span>
+              </button>
+            </div>
+          </section>
+        </div>
+
+        {/* Info Section */}
+        <section className="info-section card">
+          <h3>Información del Sistema</h3>
+          <p>
+            El sistema de TORTUTERRA permite monitorear y controlar el hábitat de tu tortuga en tiempo real.
+            Todos los controles se actualizan instantáneamente cuando hay conexión estable.
+          </p>
+          <div className="status-indicator">
+            <div className={`indicator-dot ${connected ? 'connected' : 'disconnected'}`}></div>
+            <span>Estado actual: {connected ? 'Conectado al terrario' : 'Desconectado'}</span>
+          </div>
+        </section>
+      </main>
+
+      {/* Footer */}
+      <footer className="page-footer">
+        <p>© {new Date().getFullYear()} TORTUTERRA - Sistema de Control de Terrarios</p>
+      </footer>
     </div>
   );
 };
 
-export default TerrarioControl;
+export default TerrarioControlScreen;

@@ -1,81 +1,173 @@
-/* terrarioControl.css */
-.terrario-control {
-  padding: 20px;
-  text-align: center;
-  background-color: #f4f4f9;
+/* Estilos generales */
+:root {
+  --primary-color: #4CAF50;
+  --secondary-color: #2196F3;
+  --danger-color: #f44336;
+  --warning-color: #ff9800;
+  --dark-color: #333;
+  --light-color: #f5f5f5;
+  --gray-color: #757575;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+  background-color: #f9f9f9;
+  color: #333;
+  line-height: 1.6;
+}
+
+/* Estructura de página */
+.page-container {
+  display: flex;
+  flex-direction: column;
   min-height: 100vh;
 }
 
-.widgets {
+/* Header */
+.page-header {
+  background-color: white;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  padding: 1rem 2rem;
+}
+
+.header-content {
   display: flex;
-  flex-wrap: wrap;
-  gap: 20px;
-  justify-content: center;
-  padding: 20px;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 1200px;
+  margin: 0 auto;
 }
 
-.widget {
-  border: 1px solid #ddd;
-  border-radius: 12px;
-  padding: 20px;
-  width: 200px;
-  background-color: #fff;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+.logo {
+  color: var(--primary-color);
+  font-size: 1.8rem;
+  font-weight: 700;
 }
 
-.widget:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+.connection-status {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.9rem;
 }
 
-.widget h2 {
-  margin: 0 0 10px;
-  font-size: 1.2em;
-  color: #333;
+.connection-icon {
+  font-size: 1.2rem;
 }
 
-.widget p {
-  margin: 0 0 10px;
-  font-size: 1.1em;
-  color: #666;
+.connection-icon.connected {
+  color: var(--primary-color);
 }
 
-.widget button {
-  padding: 10px;
-  background-color: #007bff;
-  color: white;
+.connection-icon.disconnected {
+  color: var(--gray-color);
+}
+
+.refresh-btn {
+  background: none;
   border: none;
-  border-radius: 5px;
   cursor: pointer;
-  transition: background-color 0.3s ease;
+  color: var(--secondary-color);
+  font-size: 1rem;
+  display: flex;
+  align-items: center;
 }
 
-.widget button:hover {
-  background-color: #0056b3;
+.refresh-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }
 
-/* Colores específicos para cada widget */
-.widget[data-type="temperatura"] {
-  background-color: #ffebee; /* Rojo claro */
+.spinning {
+  animation: spin 1s linear infinite;
 }
 
-.widget[data-type="humedad"] {
-  background-color: #e3f2fd; /* Azul claro */
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
 }
 
-.widget[data-type="comida"] {
-  background-color: #f1f8e9; /* Verde claro */
+/* Main content */
+.main-content {
+  flex: 1;
+  padding: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+  width: 100%;
 }
 
-.widget[data-type="movimiento"] {
-  background-color: #fff3e0; /* Naranja claro */
+.hero-section {
+  background-color: var(--primary-color);
+  color: white;
+  padding: 2rem;
+  border-radius: 8px;
+  margin-bottom: 2rem;
+  text-align: center;
 }
 
-.widget[data-type="ventilador"] {
-  background-color: #f5f5f5; /* Gris claro */
+.hero-section h2 {
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
 }
 
-.widget[data-type="lampara"] {
-  background-color: #fffde7; /* Amarillo claro */
+.hero-section p {
+  font-size: 1.1rem;
+  opacity: 0.9;
+}
+
+/* Dashboard grid */
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+  margin-bottom: 2rem;
+}
+
+@media (max-width: 768px) {
+  .dashboard-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Cards */
+.card {
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+  padding: 1.5rem;
+}
+
+.panel-title {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 1.3rem;
+  margin-bottom: 1.5rem;
+  color: var(--dark-color);
+}
+
+.title-icon {
+  color: var(--primary-color);
+}
+
+/* Status panel */
+.status-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.status-item {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem;
+  border-radius: 6px;
+  background-color: #f9f9;
 }

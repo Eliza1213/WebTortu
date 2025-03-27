@@ -70,6 +70,8 @@ function App() {
             <Route path="vision" element={<VisionesVisualizar />} />
             <Route path="politicas" element={<PoliticasVisualizar />} />
             <Route path="terminos" element={<TerminosVisualizar />} />
+            <Route path="iot" element={<TerrarioControl />} />
+            
           </Route>
         </Route>
 

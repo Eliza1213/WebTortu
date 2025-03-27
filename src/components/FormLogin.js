@@ -19,6 +19,7 @@ const FormLogin = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    
 
     // Validar que los campos no estén vacíos
     if (!formData.email || !formData.password) {
