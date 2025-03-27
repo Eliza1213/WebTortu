@@ -6,7 +6,6 @@ import "../style/terrarioControl.css";
 // Íconos
 import { 
   FaThermometerHalf, 
-  //FaTint, 
   FaPaw, 
   FaCog, 
   FaBolt, 
@@ -132,25 +131,20 @@ const TerrarioControlScreen = () => {
 
   return (
     <div className="page-container">
-      {/* Header */}
-      <header className="page-header">
-        <div className="header-content">
-          <h1 className="logo">TORTUTERRA</h1>
-          <div className="connection-status">
-            <FaWifi className={`connection-icon ${connected ? 'connected' : 'disconnected'}`} />
-            <span>{connected ? 'Conectado' : 'Desconectado'}</span>
-            <button className="refresh-btn" onClick={onRefresh} disabled={refreshing}>
-              <FaSyncAlt className={refreshing ? 'spinning' : ''} />
-            </button>
-          </div>
-        </div>
-      </header>
-
       {/* Main Content */}
       <main className="main-content">
         <section className="hero-section">
           <div className="hero-content">
-            <h2>Control del Terrario</h2>
+            <div className="title-container">
+              <h2>Control del Terrario</h2>
+              <div className="connection-status">
+                <FaWifi className={`connection-icon ${connected ? 'connected' : 'disconnected'}`} />
+                <span>{connected ? 'Conectado' : 'Desconectado'}</span>
+                <button className="refresh-btn" onClick={onRefresh} disabled={refreshing}>
+                  <FaSyncAlt className={refreshing ? 'spinning' : ''} />
+                </button>
+              </div>
+            </div>
             <p>Monitorea y controla el hábitat de tu tortuga desde cualquier lugar</p>
           </div>
         </section>

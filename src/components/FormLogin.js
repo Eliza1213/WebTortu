@@ -62,9 +62,9 @@ const FormLogin = () => {
 
       // Redirección basada en el rol
       if (data.rol === "admin") {
-        navigate(location.state?.from?.pathname || "/admin", { replace: true });
+        window.location.href = "/admin";
       } else {
-        navigate("/usuario", { replace: true });
+        window.location.href = "/usuario";
       }
 
     } catch (error) {

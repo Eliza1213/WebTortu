@@ -1,33 +1,34 @@
 import React, { useState, useEffect } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import "../style/Actualizar.css";
 
 const ObtenerUsuario = () => {
-  const { id } = useParams();
+  //const { id } = useParams();
   const navigate = useNavigate();
   const [usuario, setUsuario] = useState(null);
   const [cargando, setCargando] = useState(true);
 
   useEffect(() => {
-    const obtenerUsuario = async () => {
+    const obtenerPerfil = async () => {
       try {
         const token = localStorage.getItem("token");
         
-        const response = await fetch(`http://localhost:4000/api/usuarios/${id}`, {
+        const response = await fetch("http://localhost:4000/api/usuarios/perfil", {
           headers: {
-            "Authorization": `Bearer ${token}`,
+            "Authorization": token,
             "Content-Type": "application/json"
           }
         });
-
+  
         const data = await response.json();
-
+        console.log("Datos recibidos:", data); // Añade este log para depurar
+  
         if (!response.ok) {
-          throw new Error(data.message || "Error al obtener el usuario");
+          throw new Error(data.error || "Error al obtener el usuario");
         }
-
-        setUsuario(data);
+  
+        setUsuario(data); // Ahora data debería ser el objeto usuario directamente
         Swal.fire({
           icon: "success",
           title: "Usuario obtenido",
@@ -35,7 +36,7 @@ const ObtenerUsuario = () => {
           timer: 2000,
           showConfirmButton: false
         });
-
+  
       } catch (error) {
         console.error("Error:", error);
         Swal.fire({
@@ -44,14 +45,14 @@ const ObtenerUsuario = () => {
           text: error.message || "No se pudo obtener la información del usuario",
           confirmButtonText: "Entendido"
         });
-        navigate("/usuarios");
+        // navigate("/usuarios"); // Comenta o elimina esta línea para no redirigir en caso de error
       } finally {
         setCargando(false);
       }
     };
-
-    obtenerUsuario();
-  }, [id, navigate]);
+  
+    obtenerPerfil();
+  }, []);
 
   if (cargando) {
     return <div className="loading">Cargando información del usuario...</div>;
@@ -66,7 +67,7 @@ const ObtenerUsuario = () => {
       <h2>Información del Usuario</h2>
       
       <div className="usuario-info">
-        <p><strong>ID:</strong> {usuario._id}</p>
+        <p><strong>ID:</strong> {usuario.id}</p>
         <p><strong>Nombre:</strong> {usuario.nombre}</p>
         <p><strong>Apellidos:</strong> {usuario.ap} {usuario.am}</p>
         <p><strong>Username:</strong> {usuario.username}</p>
